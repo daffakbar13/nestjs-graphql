@@ -1,0 +1,150 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Brand {
+  i_id: Float
+  n_brand: String
+  n_photo: String
+  c_active: Boolean
+  d_createdAt: DateTime
+  d_updatedAt: DateTime
+  d_deletedAt: DateTime
+  products: ProductModel!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type BrandModel {
+  count: Float
+  rows: [Brand]
+}
+
+type ProductStatus {
+  i_id: Float
+  n_status: String
+  d_createdAt: DateTime
+  d_updatedAt: DateTime
+  d_deletedAt: DateTime
+  products: ProductModel!
+}
+
+type ProductStatusModel {
+  count: Float
+  rows: [ProductStatus]
+}
+
+type Product {
+  i_id: Float
+  i_brands_id: Float
+  i_product_status_id: Float
+  n_product: String
+  n_stock: Float
+  n_price: Float
+  n_photo: String
+  d_createdAt: DateTime
+  d_updatedAt: DateTime
+  d_deletedAt: DateTime
+  brand: BrandModel!
+  status: ProductStatusModel!
+}
+
+type ProductModel {
+  count: Float
+  rows: [Product]
+}
+
+type Query {
+  product(limitProductInput: LimitProduct!, findProductInput: FindProduct!): ProductModel!
+  productStatus(limitProductInput: LimitProduct!, findProductInput: FindProduct!): ProductStatusModel!
+  brands(limitBrand: LimitBrand!, findBrand: FindBrand!): BrandModel!
+}
+
+input LimitProduct {
+  limit: Float
+  offset: Float
+}
+
+input FindProduct {
+  i_id: Float
+  i_brands_id: Float
+  i_product_status_id: Float
+  n_product: String
+  n_stock: Float
+  n_price: Float
+  n_photo: String
+  d_createdAt: DateTime
+  d_updatedAt: DateTime
+  d_deletedAt: DateTime
+}
+
+input LimitBrand {
+  limit: Float
+  offset: Float
+}
+
+input FindBrand {
+  i_id: Float
+  n_brand: String
+  n_photo: String
+  c_active: Boolean
+  d_createdAt: DateTime
+  d_updatedAt: DateTime
+  d_deletedAt: DateTime
+}
+
+type Mutation {
+  createProduct(createProductInput: CreateProductInput!): ProductModel!
+  updateProduct(updateProductInput: UpdateProductInput!): ProductModel!
+  removeProduct(id: Float!): ProductModel!
+  createProductStatus(createProductInput: CreateProductStatusInput!): ProductStatusModel!
+  updateProductStatus(updateProductInput: UpdateProductStatusInput!): ProductStatusModel!
+  removeProductStatus(id: Float!): ProductStatusModel!
+  createBrand(createBrandInput: CreateBrandInput!): BrandModel!
+  updateBrand(updateBrandInput: UpdateBrandInput!): BrandModel!
+  removeBrand(id: Float!): BrandModel!
+}
+
+input CreateProductInput {
+  i_brands_id: Float
+  i_product_status_id: Float
+  n_product: String
+  n_stock: Float
+  n_price: Float
+  n_photo: String
+}
+
+input UpdateProductInput {
+  i_brands_id: Float
+  i_product_status_id: Float
+  n_product: String
+  n_stock: Float
+  n_price: Float
+  n_photo: String
+  id: Float!
+}
+
+input CreateProductStatusInput {
+  n_status: String!
+}
+
+input UpdateProductStatusInput {
+  n_status: String
+  id: Float!
+}
+
+input CreateBrandInput {
+  n_brand: String!
+  n_photo: String!
+  c_active: Boolean!
+}
+
+input UpdateBrandInput {
+  n_brand: String
+  n_photo: String
+  c_active: Boolean
+  id: Int!
+}
