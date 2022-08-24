@@ -1,23 +1,35 @@
 import { Injectable } from '@nestjs/common';
-import { CreateUserInput } from './dto/create-user.input';
-import { UpdateUserInput } from './dto/update-user.input';
+import { WhereOptions } from 'sequelize';
+import { CreateUserInput, FindUser, LimitUser, UpdateUserInput } from './dto/user.dto';
+import { User } from './entities/user.entity';
+import { UserRepository } from './users.repository';
 
 @Injectable()
-export class UsersService {
-  create(createUserInput: CreateUserInput) {
-    return 'This action adds a new user';
+export class UserService {
+  constructor(private userRepository: UserRepository) { }
+
+  public create(createUserInput: CreateUserInput): Promise<User> {
+    return this.userRepository.create(createUserInput);
   }
 
-  findAll() {
-    return `This action returns all users`;
+  public findAll(limitUser: LimitUser, findUser: FindUser): Promise<{ count: number; rows: User[] }> {
+    if (limitUser == null) {
+      limitUser = {}
+
+    }
+    if (findUser == null) {
+      findUser = {}
+    }
+
+    return this.userRepository.findAll(limitUser, findUser as WhereOptions)
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  findOne(findUser: FindUser) {
+    return this.userRepository.findOne(findUser);
   }
 
-  update(id: number, updateUserInput: UpdateUserInput) {
-    return `This action updates a #${id} user`;
+  update(updateUserInput: UpdateUserInput) {
+    return this.userRepository.update(updateUserInput)
   }
 
   remove(id: number) {

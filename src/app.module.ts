@@ -15,6 +15,9 @@ import { SellingsModule } from './sellings/sellings.module';
 import { StatusSellingsModule } from './status_sellings/status_sellings.module';
 import { config } from 'dotenv'
 import { ProductStatus } from './products/entities/product_status.entity';
+import { AuthModule } from './auth/auth.module';
+import { Role } from './roles/entities/role.entity';
+import { User } from './users/entities/user.entity';
 
 config({ path: resolve(__dirname, '../.env') })
 
@@ -35,6 +38,8 @@ config({ path: resolve(__dirname, '../.env') })
         Product,
         Brand,
         ProductStatus,
+        Role,
+        User
       ],
       autoLoadModels: true,
       sync: { alter: true },
@@ -42,8 +47,9 @@ config({ path: resolve(__dirname, '../.env') })
     }),
     ProductsModule,
     BrandsModule,
-    // RolesModule,
-    // UsersModule,
+    AuthModule,
+    RolesModule,
+    UsersModule,
     // LoggerModule,
     // PaymentsModule,
     // SellingsModule,

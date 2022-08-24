@@ -6,8 +6,11 @@ import { Product, ProductModel } from './entities/product.entity';
 import { BrandModel } from 'src/brands/entities/brand.entity';
 import { ProductStatus, ProductStatusModel } from './entities/product_status.entity';
 import { CreateProductStatusInput, UpdateProductStatusInput } from './dto/productStatus.dto';
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/auth.guard';
 
 @Resolver(() => Product)
+@UseGuards(JwtAuthGuard)
 export class ProductResolver {
   constructor(
     private readonly productService: ProductService,
