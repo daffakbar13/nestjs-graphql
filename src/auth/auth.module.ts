@@ -7,14 +7,17 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { User } from 'src/users/entities/user.entity';
 import { UsersModule } from 'src/users/users.module';
 import { AuthResolver } from './auth.resolver';
+import { config } from 'dotenv';
+import { resolve } from 'path';
 
+config({ path: resolve(__dirname, '../../.env') })
 @Module({
   imports: [
     PassportModule.register({ defaultStrategy: 'jwt', property: 'user' }),
     JwtModule.registerAsync({
       useFactory: () => ({
-        secret: "secret",
-        signOptions: { expiresIn: 6000 },
+        secret: process.env.JWT_SECRET,
+        signOptions: { expiresIn: process.env.JWT_EXPIRES },
       }),
     }),
     SequelizeModule.forFeature([User]),

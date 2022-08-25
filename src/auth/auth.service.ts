@@ -6,7 +6,10 @@ import { InjectModel } from '@nestjs/sequelize';
 import { User } from 'src/users/entities/user.entity';
 import { LoginDto, RegisterDto } from './dto/auth.dto';
 import { CreateUserInput, UpdateUserInput } from 'src/users/dto/user.dto';
+import { config } from 'dotenv';
+import { resolve } from 'path';
 
+config({ path: resolve(__dirname, '../../.env') })
 
 @Injectable()
 export class AuthService {
@@ -25,6 +28,9 @@ export class AuthService {
     if (user.count != 0) {
       throw new HttpException('Conflict', HttpStatus.CONFLICT);
     }
+
+    console.log(body);
+
 
     const input: CreateUserInput = {
       i_roles_id: 1,
@@ -67,7 +73,7 @@ export class AuthService {
 
   public async verifyToken(token: string): Promise<boolean> {
     const decodeToken = this.jwtService.verify(token, {
-      secret: 'secret'
+      secret: process.env.JWT_SECRET,
     })
 
     const user = await this.userService.findAll(null, { n_email: decodeToken.email })

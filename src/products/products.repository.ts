@@ -1,87 +1,74 @@
-import { HttpException, HttpStatus } from "@nestjs/common";
 import { InjectModel } from "@nestjs/sequelize";
 import { WhereOptions } from "sequelize";
-import { CreateProductInput, FindProduct, LimitProduct, UpdateProductInput } from "./dto/product.dto";
-import { CreateProductStatusInput, UpdateProductStatusInput } from "./dto/productStatus.dto";
+import { FilterProduct, UpdateProduct } from "./dto/product.dto";
+import { UpdateProductStatus } from "./dto/product-status.dto";
 import { Product } from "./entities/product.entity";
-import { ProductStatus } from "./entities/product_status.entity";
+import { ProductStatus } from "./entities/product-status.entity";
+import { Options } from "src/utils/options";
+import { CheckAvailibility } from "src/utils/notfound-exception";
 
 export class ProductRepository {
     @InjectModel(Product)
     private product: typeof Product
 
-    private async findOne(findProduct: FindProduct) {
-        const result = await this.product.findOne({
-            where: findProduct as WhereOptions
-        });
-        if (!result) {
-            throw new HttpException('Product not found', HttpStatus.NOT_FOUND);
-        }
+    private async findOne(filter: WhereOptions): Promise<Product> {
+        const result = await this.product.findOne({ where: filter });
+        CheckAvailibility(result, 'Product not found!')
         return result;
     }
 
-    public create(createProductInput: CreateProductInput): Promise<Product> {
-        return this.product.create(createProductInput as any);
+    public create(input): Promise<Product> {
+        return this.product.create(input);
     }
 
-    public findAll(limitProduct: LimitProduct, findProduct: WhereOptions): Promise<{ count: number; rows: Product[] }> {
+    public findAll(filter: FilterProduct, options: Options): Promise<{ count: number; rows: Product[] }> {
         return this.product.findAndCountAll({
-            where: findProduct,
-            offset: limitProduct.offset,
-            limit: limitProduct.limit
+            where: filter as any,
+            offset: options.offset,
+            limit: options.limit
         });
     }
 
-    public async update(updateProductInput: UpdateProductInput): Promise<void> {
-        await this.findOne({ i_id: updateProductInput.id })
-        await this.product.update(updateProductInput, { where: { i_id: updateProductInput.id } });
+    public async update(input: UpdateProduct): Promise<void> {
+        await this.findOne({ i_id: input.id })
+        await this.product.update(input, { where: { i_id: input.id } });
     }
 
-    public async remove(findProduct: FindProduct): Promise<void> {
-        await this.findOne(findProduct)
-        await this.product.destroy(
-            { where: findProduct as WhereOptions }
-        );
+    public async remove(filter: FilterProduct): Promise<void> {
+        await this.product.destroy({ where: filter as WhereOptions });
     }
-
 }
 
 export class ProductStatusRepository {
     @InjectModel(ProductStatus)
     private productStatus: typeof ProductStatus
 
-    private async findOne(findProduct: FindProduct) {
-        const result = await this.productStatus.findOne({
-            where: findProduct as WhereOptions
-        });
-        if (!result) {
-            throw new HttpException('Product status not found', HttpStatus.NOT_FOUND);
-        }
+    private async findOne(filter: FilterProduct) {
+        const result = await this.productStatus.findOne({ where: filter as WhereOptions });
+        CheckAvailibility(result, 'Product status not found!')
         return result;
     }
 
-    public create(createProductStatusInput: CreateProductStatusInput): Promise<ProductStatus> {
-        return this.productStatus.create(createProductStatusInput as any);
+    public create(input): Promise<ProductStatus> {
+        return this.productStatus.create(input);
     }
 
-    public findAll(limitProduct: LimitProduct, findProduct: WhereOptions): Promise<{ count: number; rows: ProductStatus[] }> {
+    public findAll(filter: WhereOptions, options: Options): Promise<{ count: number; rows: ProductStatus[] }> {
         return this.productStatus.findAndCountAll({
-            where: findProduct,
-            offset: limitProduct.offset,
-            limit: limitProduct.limit
+            where: filter,
+            offset: options.offset,
+            limit: options.limit
         });
     }
 
-    public async update(updateProductStatusInput: UpdateProductStatusInput): Promise<void> {
-        await this.findOne({ i_id: updateProductStatusInput.id })
-        await this.productStatus.update(updateProductStatusInput, { where: { i_id: updateProductStatusInput.id } });
+    public async update(input: UpdateProductStatus): Promise<void> {
+        await this.findOne({ i_id: input.id })
+        await this.productStatus.update(input, { where: { i_id: input.id } });
     }
 
-    public async remove(findProduct: FindProduct): Promise<void> {
-        await this.findOne(findProduct)
+    public async remove(filter: FilterProduct): Promise<void> {
         await this.productStatus.destroy(
-            { where: findProduct as WhereOptions }
+            { where: filter as WhereOptions }
         );
     }
-
 }

@@ -1,31 +1,37 @@
 import { Injectable } from '@nestjs/common';
-import { WhereOptions } from 'sequelize';
+import { ProductService } from 'src/products/products.service';
+import { Options } from 'src/utils/options';
+import { OptionsAuthorize } from 'src/utils/options-authorize';
 import { BrandRepository } from './brands.repository';
-import { CreateBrandInput, FindBrand, LimitBrand, UpdateBrandInput } from './dto/brand.dto';
+import { CreateBrand, FilterBrand, UpdateBrand } from './dto/brand.dto';
 import { Brand } from './entities/brand.entity';
 
 @Injectable()
 export class BrandService {
-  constructor(private brandRepository: BrandRepository) { }
-  create(createBrandInput: CreateBrandInput): Promise<Brand> {
-    return this.brandRepository.create(createBrandInput);
+  constructor(
+    private readonly repository: BrandRepository,
+    private readonly productService: ProductService
+  ) { }
+
+  public create(input: CreateBrand): Promise<Brand> {
+    return this.repository.create(input);
   }
 
-  public findAll(limitBrand: LimitBrand, findBrand: FindBrand): Promise<{ count: number; rows: Brand[] }> {
-    if (limitBrand === null) {
-      limitBrand = {}
-    }
-    if (findBrand === null) {
-      findBrand = {}
-    }
-    return this.brandRepository.findAll(limitBrand, findBrand as WhereOptions)
+  public async findAll(filter: FilterBrand, options?: Options): Promise<{ count: number; rows: Brand[] }> {
+    return await this.repository.findAll(
+      OptionsAuthorize(options),
+      OptionsAuthorize(filter)
+    )
   }
 
-  public async update(updateBrandInput: UpdateBrandInput): Promise<void> {
-    await this.brandRepository.update(updateBrandInput);
+  public async update(input: UpdateBrand): Promise<void> {
+    await this.repository.update(input);
   }
 
-  public async remove(findBrand: FindBrand): Promise<void> {
-    await this.brandRepository.remove(findBrand);
+  public async remove(filter: FilterBrand): Promise<void> {
+    await this.productService.remove({ i_brands_id: filter.i_id })
+    await this.repository.remove(
+      OptionsAuthorize(filter)
+    );
   }
 }

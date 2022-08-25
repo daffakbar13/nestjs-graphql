@@ -5,14 +5,14 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { Product } from './entities/product.entity';
 import { BrandsModule } from 'src/brands/brands.module';
 import { ProductRepository, ProductStatusRepository } from './products.repository';
-import { ProductStatus } from './entities/product_status.entity';
+import { ProductStatus } from './entities/product-status.entity';
 import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   imports: [
     SequelizeModule.forFeature([Product, ProductStatus]),
-    BrandsModule,
-    AuthModule
+    AuthModule,
+    BrandsModule
   ],
   providers: [
     ProductResolver,

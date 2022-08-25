@@ -1,16 +1,15 @@
-import { Resolver, Query, Mutation, Args, Int, ResolveField, Parent } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, ResolveField, Parent } from '@nestjs/graphql';
 import { ProductService, ProductStatusService } from './products.service';
 import { BrandService } from 'src/brands/brands.service';
-import { CreateProductInput, FindProduct, LimitProduct, UpdateProductInput } from './dto/product.dto';
+import { ArgsProduct, CreateProduct, UpdateProduct } from './dto/product.dto';
 import { Product, ProductModel } from './entities/product.entity';
 import { BrandModel } from 'src/brands/entities/brand.entity';
-import { ProductStatus, ProductStatusModel } from './entities/product_status.entity';
-import { CreateProductStatusInput, UpdateProductStatusInput } from './dto/productStatus.dto';
+import { ProductStatus, ProductStatusModel } from './entities/product-status.entity';
+import { ArgsProductStatus, CreateProductStatus, UpdateProductStatus } from './dto/product-status.dto';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
-
-@Resolver(() => Product)
 @UseGuards(JwtAuthGuard)
+@Resolver(() => Product)
 export class ProductResolver {
   constructor(
     private readonly productService: ProductService,
@@ -19,56 +18,40 @@ export class ProductResolver {
   ) { }
 
   @Mutation(() => ProductModel)
-  private async createProduct(
-    @Args(CreateProductInput.KEY) createProductInput: CreateProductInput
-  ): Promise<ProductModel> {
-    const product = await this.productService.create(createProductInput)
-
-    return this.productService.findAll(null, { i_id: product.i_id })
+  protected async createProduct(@Args(CreateProduct.KEY) input: CreateProduct): Promise<ProductModel> {
+    const product = await this.productService.create(input)
+    return this.productService.findAll({ i_id: product.i_id })
   }
 
   @Query(() => ProductModel, { name: 'product' })
-  private findAll(
-    @Args(LimitProduct.KEY) limitProduct: LimitProduct,
-    @Args(FindProduct.KEY) findProduct: FindProduct
-  ): Promise<ProductModel> {
-    return this.productService.findAll(limitProduct, findProduct);
+  protected findAll(@Args() args: ArgsProduct): Promise<ProductModel> {
+    return this.productService.findAll(args.filter, args.options);
   }
 
   @ResolveField(() => BrandModel)
-  private async brand(
-    @Parent() product: Product
-  ): Promise<BrandModel> {
-    return this.brandService.findAll(null, { i_id: product.i_brands_id })
+  protected brand(@Parent() product: Product): Promise<BrandModel> {
+    return this.brandService.findAll({ i_id: product.i_brands_id })
   }
 
   @ResolveField(() => ProductStatusModel)
-  private status(
-    @Parent() product: Product
-  ): Promise<ProductStatusModel> {
+  protected status(@Parent() product: Product): Promise<ProductStatusModel> {
     return this.productStatusService.findAll(null, { i_id: product.i_product_status_id })
   }
 
   @Mutation(() => ProductModel)
-  private async updateProduct(
-    @Args('updateProductInput') updateProductInput: UpdateProductInput
-  ): Promise<ProductModel> {
-    await this.productService.update(updateProductInput)
-    return await this.productService.findAll(null, { i_id: updateProductInput.id })
+  protected async updateProduct(@Args(UpdateProduct.KEY) input: UpdateProduct): Promise<ProductModel> {
+    await this.productService.update(input)
+    return await this.productService.findAll({ i_id: input.id })
   }
 
   @Mutation(() => ProductModel)
-  private async removeProduct(
-    @Args('id') id: number
-  ): Promise<ProductModel> {
-    const result = await this.productService.findAll(null, { i_id: id })
-
+  protected async removeProduct(@Args('id') id: number): Promise<ProductModel> {
+    const result = await this.productService.findAll({ i_id: id })
     await this.productService.remove({ i_id: id });
-
     return result
   }
 }
-
+@UseGuards(JwtAuthGuard)
 @Resolver(() => ProductStatus)
 export class ProductStatusResolver {
   constructor(
@@ -77,45 +60,33 @@ export class ProductStatusResolver {
   ) { }
 
   @Mutation(() => ProductStatusModel)
-  private async createProductStatus(
-    @Args(CreateProductStatusInput.KEY) createProductStatusInput: CreateProductStatusInput
-  ): Promise<ProductStatusModel> {
-    const product = await this.productStatusService.create(createProductStatusInput)
-
+  protected async createProductStatus(@Args(CreateProductStatus.KEY) input: CreateProductStatus): Promise<ProductStatusModel> {
+    const product = await this.productStatusService.create(input)
     return this.productStatusService.findAll(null, { i_id: product.i_id })
   }
 
   @Query(() => ProductStatusModel, { name: 'productStatus' })
-  private findAll(
-    @Args(LimitProduct.KEY) limitProduct: LimitProduct,
-    @Args(FindProduct.KEY) findProduct: FindProduct
+  protected findAll(
+    @Args() args: ArgsProductStatus
   ): Promise<ProductStatusModel> {
-    return this.productStatusService.findAll(limitProduct, findProduct);
+    return this.productStatusService.findAll(args.options, args.filter);
   }
 
   @ResolveField(() => ProductModel)
-  private async products(
-    @Parent() productStatus: ProductStatus
-  ): Promise<ProductModel> {
-    return this.productService.findAll(null, { i_product_status_id: productStatus.i_id })
+  protected async products(@Parent() productStatus: ProductStatus): Promise<ProductModel> {
+    return this.productService.findAll({ i_product_status_id: productStatus.i_id })
   }
 
   @Mutation(() => ProductStatusModel)
-  private async updateProductStatus(
-    @Args(UpdateProductStatusInput.KEY) updateProductStatusInput: UpdateProductStatusInput
-  ): Promise<ProductStatusModel> {
-    await this.productStatusService.update(updateProductStatusInput)
-    return await this.productStatusService.findAll(null, { i_id: updateProductStatusInput.id })
+  protected async updateProductStatus(@Args(UpdateProductStatus.KEY) input: UpdateProductStatus): Promise<ProductStatusModel> {
+    await this.productStatusService.update(input)
+    return await this.productStatusService.findAll(null, { i_id: input.id })
   }
 
   @Mutation(() => ProductStatusModel)
-  private async removeProductStatus(
-    @Args('id') id: number
-  ): Promise<ProductStatusModel> {
+  protected async removeProductStatus(@Args('id') id: number): Promise<ProductStatusModel> {
     const result = await this.productStatusService.findAll(null, { i_id: id })
-
     await this.productStatusService.remove({ i_id: id });
-
     return result
   }
 }

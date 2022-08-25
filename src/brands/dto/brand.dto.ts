@@ -1,58 +1,68 @@
-import { InputType, Int, Field, PartialType } from '@nestjs/graphql';
+import { InputType, Field, PartialType, ArgsType } from '@nestjs/graphql';
+import { IsBoolean, IsDate, IsInt, IsString } from 'class-validator';
+import { Options } from 'src/utils/options';
 
 @InputType()
-export class CreateBrandInput {
-    @Field()
-    n_brand: string;
+export class CreateBrand {
+    static readonly KEY = 'createBrand'
 
     @Field()
-    n_photo: string;
+    @IsString()
+    public readonly n_brand: string;
 
     @Field()
-    c_active: boolean;
+    @IsString()
+    public readonly n_photo: string;
+
+    @Field()
+    @IsBoolean()
+    public readonly c_active: string;
 }
 
 @InputType()
-export class UpdateBrandInput extends PartialType(CreateBrandInput) {
-    static readonly KEY = 'updateBrandInput'
-
-    @Field(() => Int)
-    id: number;
+export class UpdateBrand extends PartialType(CreateBrand) {
+    static readonly KEY = 'updateBrand'
+    @Field()
+    @IsInt()
+    public readonly id: number;
 }
 
 @InputType()
-export class LimitBrand {
-    static readonly KEY = 'limitBrand'
+export class FilterBrand {
+    @Field({ nullable: true })
+    @IsInt()
+    public readonly i_id?: number;
 
     @Field({ nullable: true })
-    limit?: number
+    @IsString()
+    public readonly n_brand?: string;
 
     @Field({ nullable: true })
-    offset?: number
+    @IsString()
+    public readonly n_photo?: string;
+
+    @Field({ nullable: true })
+    @IsBoolean()
+    public readonly c_active?: string;
+
+    @Field({ nullable: true })
+    @IsDate()
+    public readonly d_createdAt?: Date;
+
+    @Field({ nullable: true })
+    @IsDate()
+    public readonly d_updatedAt?: Date;
+
+    @Field({ nullable: true })
+    @IsDate()
+    public readonly d_deletedAt?: Date;
 }
 
-@InputType()
-export class FindBrand {
-    static readonly KEY = 'findBrand'
+@ArgsType()
+export class ArgsBrand {
+    @Field({ nullable: true })
+    public readonly options: Options
 
     @Field({ nullable: true })
-    i_id?: number;
-
-    @Field({ nullable: true })
-    n_brand?: string;
-
-    @Field({ nullable: true })
-    n_photo?: string;
-
-    @Field({ nullable: true })
-    c_active?: boolean;
-
-    @Field({ nullable: true })
-    d_createdAt?: Date;
-
-    @Field({ nullable: true })
-    d_updatedAt?: Date;
-
-    @Field({ nullable: true })
-    d_deletedAt?: Date;
+    public readonly filter: FilterBrand
 }

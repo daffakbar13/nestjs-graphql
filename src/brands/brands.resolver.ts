@@ -1,10 +1,13 @@
-import { Resolver, Query, Mutation, Args, Int, Parent, ResolveField } from '@nestjs/graphql';
+import { UseGuards } from '@nestjs/common';
+import { Resolver, Query, Mutation, Args, Parent, ResolveField } from '@nestjs/graphql';
+import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { ProductModel } from 'src/products/entities/product.entity';
 import { ProductService } from 'src/products/products.service';
 import { BrandService } from './brands.service';
-import { CreateBrandInput, FindBrand, LimitBrand, UpdateBrandInput } from './dto/brand.dto';
+import { ArgsBrand, CreateBrand, UpdateBrand } from './dto/brand.dto';
 import { Brand, BrandModel } from './entities/brand.entity';
 
+@UseGuards(JwtAuthGuard)
 @Resolver(() => Brand)
 export class BrandResolver {
   constructor(
@@ -13,47 +16,32 @@ export class BrandResolver {
   ) { }
 
   @Mutation(() => BrandModel)
-  private async createBrand(@Args('createBrandInput') createBrandInput: CreateBrandInput) {
-    const brand = await this.brandService.create(createBrandInput);
-    return this.brandService.findAll(null, { i_id: brand.i_id })
+  protected async createBrand(@Args(CreateBrand.KEY) input: CreateBrand) {
+    const brand = await this.brandService.create(input);
+    return await this.brandService.findAll({ i_id: brand.i_id })
   }
 
   @Query(() => BrandModel, { name: 'brands' })
-  private findAll(
-    @Args(LimitBrand.KEY) limitBrand: LimitBrand,
-    @Args(FindBrand.KEY) findBrand: FindBrand
-  ): Promise<BrandModel> {
-    return this.brandService.findAll(limitBrand, findBrand);
+  protected findAll(@Args() args: ArgsBrand): Promise<BrandModel> {
+    return this.brandService.findAll(args.filter, args.options);
   }
 
   @ResolveField(() => ProductModel)
-  private async products(
-    @Parent() brand: Brand
-  ): Promise<ProductModel> {
-    return this.productService.findAll(null, { i_brands_id: brand.i_id })
+  protected products(@Parent() brand: Brand): Promise<ProductModel> {
+    return this.productService.findAll({ i_brands_id: brand.i_id })
   }
 
   @Mutation(() => BrandModel)
-  private async updateBrand(
-    @Args(UpdateBrandInput.KEY) updateBrandInput: UpdateBrandInput
-  ): Promise<BrandModel> {
-    await this.brandService.update(updateBrandInput);
-    return this.brandService.findAll(null, { i_id: updateBrandInput.id })
+  protected async updateBrand(@Args(UpdateBrand.KEY) input: UpdateBrand): Promise<BrandModel> {
+    await this.brandService.update(input);
+    return this.brandService.findAll({ i_id: input.id })
   }
 
   @Mutation(() => BrandModel)
-  private async removeBrand(
-    @Args('id') id: number
-  ): Promise<BrandModel> {
-    const result = await this.brandService.findAll(null, { i_id: id })
-
-    await this.productService.remove(
-      { i_brands_id: id }
-    )
-    await this.brandService.remove(
-      { i_id: id }
-    );
-
+  protected async removeBrand(@Args('id') id: number): Promise<BrandModel> {
+    const result = await this.brandService.findAll({ i_id: id })
+    await this.productService.remove({ i_brands_id: id })
+    await this.brandService.remove({ i_id: id });
     return result
   }
 }

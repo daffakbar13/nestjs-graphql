@@ -13,33 +13,33 @@ export class ProductStatus extends Model {
   @AutoIncrement
   @Column({})
   @Field({ nullable: true })
-  i_id: number
+  public readonly i_id: number;
 
   @Column({ type: DataType.TEXT })
   @Field({ nullable: true })
-  n_status: string;
+  public readonly n_status: string;
 
   @CreatedAt
   @Field({ nullable: true })
-  d_createdAt: Date;
+  public readonly d_createdAt: Date;
 
   @UpdatedAt
   @Field({ nullable: true })
-  d_updatedAt: Date;
+  public readonly d_updatedAt: Date;
 
   @DeletedAt
   @Field({ nullable: true })
-  d_deletedAt: Date;
+  public readonly d_deletedAt: Date;
 
   @HasMany(() => Product)
-  product: Product[]
+  public readonly product: Product[];
 }
 
 @ObjectType()
 export class ProductStatusModel {
   @Field({ nullable: true })
-  count: number
+  public readonly count: number;
 
   @Field(() => [ProductStatus], { nullable: 'itemsAndList' })
-  rows: ProductStatus[]
+  public readonly rows: ProductStatus[];
 }

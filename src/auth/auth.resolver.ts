@@ -18,7 +18,6 @@ export class AuthResolver {
   }
 
   @Mutation(() => Token)
-  @UseInterceptors(ClassSerializerInterceptor)
   async login(
     @Args(LoginDto.KEY) body: LoginDto
   ) {

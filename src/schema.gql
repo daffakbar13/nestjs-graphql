@@ -83,19 +83,19 @@ type Token {
 }
 
 type Query {
-  product(limitProductInput: LimitProduct!, findProductInput: FindProduct!): ProductModel!
-  productStatus(limitProductInput: LimitProduct!, findProductInput: FindProduct!): ProductStatusModel!
-  brands(limitBrand: LimitBrand!, findBrand: FindBrand!): BrandModel!
+  product(options: Options, filter: FilterProduct): ProductModel!
+  productStatus(options: Options, filter: FilterProductStatus): ProductStatusModel!
+  brands(options: Options, filter: FilterBrand): BrandModel!
   roles: [Role!]!
   role(id: Int!): Role!
 }
 
-input LimitProduct {
+input Options {
   limit: Float
   offset: Float
 }
 
-input FindProduct {
+input FilterProduct {
   i_id: Float
   i_brands_id: Float
   i_product_status_id: Float
@@ -108,48 +108,51 @@ input FindProduct {
   d_deletedAt: DateTime
 }
 
-input LimitBrand {
-  limit: Float
-  offset: Float
+input FilterProductStatus {
+  i_id: Float
+  n_status: String
+  d_createdAt: DateTime
+  d_updatedAt: DateTime
+  d_deletedAt: DateTime
 }
 
-input FindBrand {
+input FilterBrand {
   i_id: Float
   n_brand: String
   n_photo: String
-  c_active: Boolean
+  c_active: String
   d_createdAt: DateTime
   d_updatedAt: DateTime
   d_deletedAt: DateTime
 }
 
 type Mutation {
-  createProduct(createProductInput: CreateProductInput!): ProductModel!
-  updateProduct(updateProductInput: UpdateProductInput!): ProductModel!
+  createProduct(createProduct: CreateProduct!): ProductModel!
+  updateProduct(updateProduct: UpdateProduct!): ProductModel!
   removeProduct(id: Float!): ProductModel!
-  createProductStatus(createProductInput: CreateProductStatusInput!): ProductStatusModel!
-  updateProductStatus(updateProductInput: UpdateProductStatusInput!): ProductStatusModel!
+  createProductStatus(createProductStatus: CreateProductStatus!): ProductStatusModel!
+  updateProductStatus(updateProduct: UpdateProductStatus!): ProductStatusModel!
   removeProductStatus(id: Float!): ProductStatusModel!
-  createBrand(createBrandInput: CreateBrandInput!): BrandModel!
-  updateBrand(updateBrandInput: UpdateBrandInput!): BrandModel!
-  removeBrand(id: Float!): BrandModel!
   register(register: RegisterDto!): User!
-  login(register: LoginDto!): Token!
+  login(login: LoginDto!): Token!
+  createBrand(createBrand: CreateBrand!): BrandModel!
+  updateBrand(updateBrand: UpdateBrand!): BrandModel!
+  removeBrand(id: Float!): BrandModel!
   createRole(createRoleInput: CreateRoleInput!): Role!
   updateRole(updateRoleInput: UpdateRoleInput!): Role!
   removeRole(id: Int!): Role!
 }
 
-input CreateProductInput {
-  i_brands_id: Float
-  i_product_status_id: Float
-  n_product: String
-  n_stock: Float
-  n_price: Float
-  n_photo: String
+input CreateProduct {
+  i_brands_id: Float!
+  i_product_status_id: Float!
+  n_product: String!
+  n_stock: Float!
+  n_price: Float!
+  n_photo: String!
 }
 
-input UpdateProductInput {
+input UpdateProduct {
   i_brands_id: Float
   i_product_status_id: Float
   n_product: String
@@ -159,26 +162,13 @@ input UpdateProductInput {
   id: Float!
 }
 
-input CreateProductStatusInput {
+input CreateProductStatus {
   n_status: String!
 }
 
-input UpdateProductStatusInput {
+input UpdateProductStatus {
   n_status: String
   id: Float!
-}
-
-input CreateBrandInput {
-  n_brand: String!
-  n_photo: String!
-  c_active: Boolean!
-}
-
-input UpdateBrandInput {
-  n_brand: String
-  n_photo: String
-  c_active: Boolean
-  id: Int!
 }
 
 input RegisterDto {
@@ -190,6 +180,19 @@ input RegisterDto {
 input LoginDto {
   email: String!
   password: String!
+}
+
+input CreateBrand {
+  n_brand: String!
+  n_photo: String!
+  c_active: String!
+}
+
+input UpdateBrand {
+  n_brand: String
+  n_photo: String
+  c_active: String
+  id: Float!
 }
 
 input CreateRoleInput {

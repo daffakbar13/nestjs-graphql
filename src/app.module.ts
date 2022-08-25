@@ -14,7 +14,7 @@ import { PaymentsModule } from './payments/payments.module';
 import { SellingsModule } from './sellings/sellings.module';
 import { StatusSellingsModule } from './status_sellings/status_sellings.module';
 import { config } from 'dotenv'
-import { ProductStatus } from './products/entities/product_status.entity';
+import { ProductStatus } from './products/entities/product-status.entity';
 import { AuthModule } from './auth/auth.module';
 import { Role } from './roles/entities/role.entity';
 import { User } from './users/entities/user.entity';
@@ -42,7 +42,7 @@ config({ path: resolve(__dirname, '../.env') })
         User
       ],
       autoLoadModels: true,
-      sync: { alter: true },
+      sync: { alter: false },
       synchronize: true,
     }),
     ProductsModule,

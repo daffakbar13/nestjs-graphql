@@ -18,13 +18,12 @@ export class RegisterDto {
 
     @Field()
     @IsString()
-    @IsOptional()
-    public readonly name?: string;
+    public readonly name: string;
 }
 
 @InputType()
 export class LoginDto {
-    static readonly KEY = 'register'
+    static readonly KEY = 'login'
 
     @Field()
     @Trim()
@@ -39,5 +38,5 @@ export class LoginDto {
 @ObjectType()
 export class Token {
     @Field()
-    token: string
+    public readonly token: string
 }

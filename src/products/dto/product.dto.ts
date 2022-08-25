@@ -1,77 +1,94 @@
-import { InputType, Field, PartialType } from '@nestjs/graphql';
+import { InputType, Field, PartialType, ArgsType, OmitType, PickType } from '@nestjs/graphql';
+import { IsDate, IsInt, IsString, MaxLength } from 'class-validator';
+import { Options } from 'src/utils/options';
+import { Product } from '../entities/product.entity';
 
 @InputType()
-export class CreateProductInput {
-    static readonly KEY = 'createProductInput'
+export class CreateProduct {
+    static readonly KEY = 'createProduct'
 
-    @Field({ nullable: true })
-    i_brands_id: number;
-
-    @Field({ nullable: true })
-    i_product_status_id: number;
-
-    @Field({ nullable: true })
-    n_product: string;
-
-    @Field({ nullable: true })
-    n_stock: number;
-
-    @Field({ nullable: true })
-    n_price: number;
-
-    @Field({ nullable: true })
-    n_photo: string;
-}
-
-@InputType()
-export class UpdateProductInput extends PartialType(CreateProductInput) {
-    static readonly KEY = 'updateProductInput'
     @Field()
-    id: number;
+    @IsInt()
+    public readonly i_brands_id: number;
+
+    @Field()
+    @IsInt()
+    public readonly i_product_status_id: number;
+
+    @Field()
+    @IsString()
+    @MaxLength(16)
+    public readonly n_product: string;
+
+    @Field()
+    @IsInt()
+    public readonly n_stock: number;
+
+    @Field()
+    @IsInt()
+    public readonly n_price: number;
+
+    @Field()
+    @IsString()
+    public readonly n_photo: string;
 }
 
 @InputType()
-export class LimitProduct {
-    static readonly KEY = 'limitProductInput'
-
-    @Field({ nullable: true })
-    limit?: number
-
-    @Field({ nullable: true })
-    offset?: number
+export class UpdateProduct extends PartialType(CreateProduct) {
+    static readonly KEY = 'updateProduct'
+    @Field()
+    @IsInt()
+    public readonly id: number;
 }
 
 @InputType()
-export class FindProduct {
-    static readonly KEY = 'findProductInput'
+export class FilterProduct {
+    @Field({ nullable: true })
+    @IsInt()
+    public readonly i_id?: number;
 
     @Field({ nullable: true })
-    i_id?: number;
+    @IsInt()
+    public readonly i_brands_id?: number;
 
     @Field({ nullable: true })
-    i_brands_id?: number;
+    @IsInt()
+    public readonly i_product_status_id?: number;
 
     @Field({ nullable: true })
-    i_product_status_id?: number;
+    @IsString()
+    public readonly n_product?: string;
 
     @Field({ nullable: true })
-    n_product?: string;
+    @IsInt()
+    public readonly n_stock?: number;
 
     @Field({ nullable: true })
-    n_stock?: number;
+    @IsInt()
+    public readonly n_price?: number;
 
     @Field({ nullable: true })
-    n_price?: number;
+    @IsString()
+    public readonly n_photo?: string;
 
     @Field({ nullable: true })
-    n_photo?: string;
+    @IsDate()
+    public readonly d_createdAt?: Date;
 
     @Field({ nullable: true })
-    d_createdAt?: Date;
+    @IsDate()
+    public readonly d_updatedAt?: Date;
 
     @Field({ nullable: true })
-    d_updatedAt?: Date;
+    @IsDate()
+    public readonly d_deletedAt?: Date;
+}
+
+@ArgsType()
+export class ArgsProduct {
+    @Field({ nullable: true })
+    public readonly options: Options
 
     @Field({ nullable: true })
-    d_deletedAt?: Date;
+    public readonly filter: FilterProduct
 }
