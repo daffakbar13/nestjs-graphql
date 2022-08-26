@@ -12,6 +12,7 @@ export class UserRepository {
         const result = await this.user.findOne({
             where: findUser as WhereOptions
         });
+
         if (!result) {
             throw new HttpException('User not found', HttpStatus.NOT_FOUND);
         }

@@ -58,9 +58,6 @@ export class FindUser {
     n_email?: string;
 
     @Field()
-    n_password?: string;
-
-    @Field()
     c_active?: boolean;
 
     @Field({ nullable: true })

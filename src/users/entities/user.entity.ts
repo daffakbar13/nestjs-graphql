@@ -1,8 +1,8 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { Table, Column, Model, DataType, HasMany, ForeignKey, BelongsTo, AutoIncrement, PrimaryKey, CreatedAt, DeletedAt, UpdatedAt } from 'sequelize-typescript';
-import { Logger } from 'src/logger/entities/logger.entity';
+import { Brand } from 'src/brands/entities/brand.entity';
+import { Product } from 'src/products/entities/product.entity';
 import { Role } from 'src/roles/entities/role.entity';
-import { Selling } from 'src/sellings/entities/selling.entity';
 
 @Table({
   tableName: 'users',
@@ -14,50 +14,64 @@ export class User extends Model {
   @AutoIncrement
   @Column({})
   @Field({ nullable: true })
-  i_id: number
+  readonly i_id: number;
 
   @ForeignKey(() => Role)
-  @Column({ type: DataType.INTEGER })
+  @Column({})
   @Field()
-  i_roles_id: number;
+  readonly i_roles_id: number;
 
   @BelongsTo(() => Role)
-  role: Role
+  readonly role: Role;
 
   @Column({ type: DataType.TEXT })
   @Field()
-  n_name: string;
+  readonly n_name: string;
 
   @Column({ type: DataType.TEXT })
   @Field()
-  n_email: string;
+  readonly n_email: string;
 
   @Column({ type: DataType.TEXT })
-  @Field()
-  n_password: string;
+  readonly n_password: string;
 
   @Column({ type: DataType.BOOLEAN })
   @Field()
-  c_active: boolean;
+  readonly c_active: boolean;
 
   @CreatedAt
   @Field({ nullable: true })
-  d_createdAt: Date;
+  readonly d_createdAt: Date;
 
   @UpdatedAt
   @Field({ nullable: true })
-  d_updatedAt: Date;
+  readonly d_updatedAt: Date;
 
   @Column({})
   @Field({ nullable: true })
-  d_lastLoginAt: Date;
+  readonly d_lastLoginAt: Date;
 
   @DeletedAt
   @Field({ nullable: true })
-  d_deletedAt: Date;
+  readonly d_deletedAt: Date;
 
-  // @HasMany(() => Selling)
-  // Sellings: Selling[]
+  @HasMany(() => Product, 'i_createdByUserId')
+  readonly productCreated: Product[]
+
+  @HasMany(() => Product, 'i_updatedByUserId')
+  readonly productUpdated: Product[]
+
+  @HasMany(() => Product, 'i_deletedByUserId')
+  readonly productDeleted: Product[]
+
+  @HasMany(() => Brand, 'i_createdByUserId')
+  readonly brandCreated: Brand[]
+
+  @HasMany(() => Brand, 'i_updatedByUserId')
+  readonly brandUpdated: Brand[]
+
+  @HasMany(() => Brand, 'i_deletedByUserId')
+  readonly brandDeleted: Brand[]
 
   // @HasMany(() => Logger)
   // logs: Logger[]
@@ -66,8 +80,8 @@ export class User extends Model {
 @ObjectType()
 export class UserModel {
   @Field({ nullable: true })
-  count: number
+  readonly count: number
 
   @Field(() => [User], { nullable: 'itemsAndList' })
-  rows: User[]
+  readonly rows: User[]
 }

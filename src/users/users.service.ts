@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { WhereOptions } from 'sequelize';
 import { CreateUserInput, FindUser, LimitUser, UpdateUserInput } from './dto/user.dto';
 import { User } from './entities/user.entity';
@@ -6,7 +7,9 @@ import { UserRepository } from './users.repository';
 
 @Injectable()
 export class UserService {
-  constructor(private userRepository: UserRepository) { }
+  constructor(
+    private userRepository: UserRepository,
+  ) { }
 
   public create(createUserInput: CreateUserInput): Promise<User> {
     return this.userRepository.create(createUserInput);
@@ -35,4 +38,6 @@ export class UserService {
   remove(id: number) {
     return `This action removes a #${id} user`;
   }
+
+
 }

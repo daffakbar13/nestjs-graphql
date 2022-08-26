@@ -3,6 +3,7 @@ import { Resolver, Query, Mutation, Args, Parent, ResolveField } from '@nestjs/g
 import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { ProductModel } from 'src/products/entities/product.entity';
 import { ProductService } from 'src/products/products.service';
+import { CurrentUser } from 'src/utils/current-user';
 import { BrandService } from './brands.service';
 import { ArgsBrand, CreateBrand, UpdateBrand } from './dto/brand.dto';
 import { Brand, BrandModel } from './entities/brand.entity';
@@ -16,9 +17,11 @@ export class BrandResolver {
   ) { }
 
   @Mutation(() => BrandModel)
-  protected async createBrand(@Args(CreateBrand.KEY) input: CreateBrand) {
-    const brand = await this.brandService.create(input);
-    return await this.brandService.findAll({ i_id: brand.i_id })
+  protected async createBrand(
+    @Args(CreateBrand.KEY) input: CreateBrand,
+    @CurrentUser() token: string
+  ) {
+    return await this.brandService.create(input, token);
   }
 
   @Query(() => BrandModel, { name: 'brands' })
@@ -28,20 +31,22 @@ export class BrandResolver {
 
   @ResolveField(() => ProductModel)
   protected products(@Parent() brand: Brand): Promise<ProductModel> {
-    return this.productService.findAll({ i_brands_id: brand.i_id })
+    return this.productService.findAll({ i_brandId: brand.i_id })
   }
 
   @Mutation(() => BrandModel)
-  protected async updateBrand(@Args(UpdateBrand.KEY) input: UpdateBrand): Promise<BrandModel> {
-    await this.brandService.update(input);
-    return this.brandService.findAll({ i_id: input.id })
+  protected updateBrand(
+    @Args(UpdateBrand.KEY) input: UpdateBrand,
+    @CurrentUser() token: string
+  ): Promise<BrandModel> {
+    return this.brandService.update(input, token);
   }
 
   @Mutation(() => BrandModel)
-  protected async removeBrand(@Args('id') id: number): Promise<BrandModel> {
-    const result = await this.brandService.findAll({ i_id: id })
-    await this.productService.remove({ i_brands_id: id })
-    await this.brandService.remove({ i_id: id });
-    return result
+  protected async removeBrand(
+    @Args('id') id: number,
+    @CurrentUser() token: string
+  ): Promise<BrandModel> {
+    return await this.brandService.remove({ i_id: id }, token);
   }
 }

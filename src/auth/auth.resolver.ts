@@ -1,26 +1,24 @@
 import { UseInterceptors, ClassSerializerInterceptor } from '@nestjs/common';
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
-import { UpdateUserInput } from 'src/users/dto/user.dto';
-import { User } from 'src/users/entities/user.entity';
+import { User, UserModel } from 'src/users/entities/user.entity';
 import { AuthService } from './auth.service';
-import { LoginDto, RegisterDto, Token } from './dto/auth.dto';
+import { LoginDto, RegisterUser, Token } from './dto/auth.dto';
 
 @Resolver(() => User)
 export class AuthResolver {
   constructor(private readonly authService: AuthService) { }
 
-  @Mutation(() => User)
-  @UseInterceptors(ClassSerializerInterceptor)
-  register(
-    @Args(RegisterDto.KEY) body: RegisterDto
-  ): Promise<User | never> {
-    return this.authService.register(body)
+  @Mutation(() => UserModel)
+  protected async register(
+    @Args(RegisterUser.KEY) input: RegisterUser
+  ): Promise<UserModel> {
+    return await this.authService.register(input)
   }
 
   @Mutation(() => Token)
   async login(
-    @Args(LoginDto.KEY) body: LoginDto
+    @Args(LoginDto.KEY) input: LoginDto
   ) {
-    return { token: await this.authService.login(body) }
+    return { token: await this.authService.login(input) }
   }
 }

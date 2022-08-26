@@ -3,7 +3,7 @@ import { Trim } from 'class-sanitizer';
 import { IsEmail, IsOptional, IsString, MinLength } from 'class-validator';
 
 @InputType()
-export class RegisterDto {
+export class RegisterUser {
     static readonly KEY = 'register'
 
     @Field()

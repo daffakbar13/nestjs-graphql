@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './auth.strategy';
-import { JwtModule } from '@nestjs/jwt';
+import { JwtModule, JwtService } from '@nestjs/jwt';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { User } from 'src/users/entities/user.entity';
 import { UsersModule } from 'src/users/users.module';

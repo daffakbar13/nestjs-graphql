@@ -7,13 +7,17 @@ import { Product } from '../entities/product.entity';
 export class CreateProduct {
     static readonly KEY = 'createProduct'
 
-    @Field()
-    @IsInt()
-    public readonly i_brands_id: number;
+    public readonly i_createdByUserId: number;
+
+    public readonly i_updatedByUserId: number;
 
     @Field()
     @IsInt()
-    public readonly i_product_status_id: number;
+    public readonly i_brandId: number;
+
+    @Field()
+    @IsInt()
+    public readonly i_productStatusId: number;
 
     @Field()
     @IsString()
@@ -38,7 +42,7 @@ export class UpdateProduct extends PartialType(CreateProduct) {
     static readonly KEY = 'updateProduct'
     @Field()
     @IsInt()
-    public readonly id: number;
+    public readonly id?: number;
 }
 
 @InputType()
@@ -49,11 +53,11 @@ export class FilterProduct {
 
     @Field({ nullable: true })
     @IsInt()
-    public readonly i_brands_id?: number;
+    public readonly i_brandId?: number;
 
     @Field({ nullable: true })
     @IsInt()
-    public readonly i_product_status_id?: number;
+    public readonly i_productStatusId?: number;
 
     @Field({ nullable: true })
     @IsString()

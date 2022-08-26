@@ -6,6 +6,10 @@ import { Options } from 'src/utils/options';
 export class CreateBrand {
     static readonly KEY = 'createBrand'
 
+    public readonly i_createdByUserId: number;
+
+    public readonly i_updatedByUserId: number;
+
     @Field()
     @IsString()
     public readonly n_brand: string;
@@ -16,7 +20,7 @@ export class CreateBrand {
 
     @Field()
     @IsBoolean()
-    public readonly c_active: string;
+    public readonly c_active: boolean;
 }
 
 @InputType()
@@ -24,7 +28,7 @@ export class UpdateBrand extends PartialType(CreateBrand) {
     static readonly KEY = 'updateBrand'
     @Field()
     @IsInt()
-    public readonly id: number;
+    public readonly id?: number;
 }
 
 @InputType()

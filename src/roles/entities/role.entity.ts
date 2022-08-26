@@ -26,10 +26,6 @@ export class Role extends Model {
   @Field({ nullable: true })
   d_updatedAt: Date;
 
-  @DeletedAt
-  @Field({ nullable: true })
-  d_deletedAt: Date;
-
   @HasMany(() => User)
   users: User[]
 }

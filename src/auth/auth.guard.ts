@@ -1,4 +1,4 @@
-import { Injectable, ExecutionContext, CanActivate } from '@nestjs/common';
+import { Injectable, ExecutionContext, CanActivate, UnauthorizedException } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { Request } from 'express';
 import { User } from 'src/users/entities/user.entity';
@@ -7,7 +7,7 @@ import { AuthService } from './auth.service';
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
     constructor(
-        private authService: AuthService
+        private readonly authService: AuthService
     ) { }
     public handleRequest(err: unknown, user: User): any {
         return user;
@@ -18,6 +18,10 @@ export class JwtAuthGuard implements CanActivate {
 
         const token = ctx.getContext().req.headers.authorization;
 
-        return this.authService.verifyToken(token as unknown as string)
+        const user = await this.authService.getUserByToken(token as unknown as string)
+
+        if (!user || user.c_active === false) { throw new UnauthorizedException }
+
+        return true
     }
 }

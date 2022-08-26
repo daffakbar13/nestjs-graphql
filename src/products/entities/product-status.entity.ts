@@ -3,43 +3,38 @@ import { Table, Column, DataType, HasMany, Model, CreatedAt, DeletedAt, UpdatedA
 import { Product } from 'src/products/entities/product.entity';
 
 @Table({
-  tableName: 'm_product_status',
-  freezeTableName: true,
-  paranoid: true
+  tableName: 'm_productStatus',
+  freezeTableName: true
 })
 @ObjectType()
 export class ProductStatus extends Model {
   @PrimaryKey
   @AutoIncrement
   @Column({})
-  @Field({ nullable: true })
-  public readonly i_id: number;
+  @Field()
+  readonly i_id: number;
 
   @Column({ type: DataType.TEXT })
-  @Field({ nullable: true })
-  public readonly n_status: string;
+  @Field()
+  readonly n_status: string;
 
   @CreatedAt
-  @Field({ nullable: true })
-  public readonly d_createdAt: Date;
+  @Field()
+  readonly d_createdAt: Date;
 
   @UpdatedAt
-  @Field({ nullable: true })
-  public readonly d_updatedAt: Date;
-
-  @DeletedAt
-  @Field({ nullable: true })
-  public readonly d_deletedAt: Date;
+  @Field()
+  readonly d_updatedAt: Date;
 
   @HasMany(() => Product)
-  public readonly product: Product[];
+  readonly product: Product[];
 }
 
 @ObjectType()
 export class ProductStatusModel {
-  @Field({ nullable: true })
-  public readonly count: number;
+  @Field()
+  readonly count: number;
 
   @Field(() => [ProductStatus], { nullable: 'itemsAndList' })
-  public readonly rows: ProductStatus[];
+  readonly rows: ProductStatus[];
 }

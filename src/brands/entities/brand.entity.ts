@@ -1,6 +1,7 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { AutoIncrement, Column, CreatedAt, DataType, DeletedAt, HasMany, Model, PrimaryKey, Table, UpdatedAt } from 'sequelize-typescript';
+import { AutoIncrement, BelongsTo, Column, CreatedAt, DataType, DeletedAt, ForeignKey, HasMany, Model, PrimaryKey, Table, UpdatedAt } from 'sequelize-typescript';
 import { Product } from 'src/products/entities/product.entity';
+import { User } from 'src/users/entities/user.entity';
 
 @Table({
   tableName: 't_brand',
@@ -11,42 +12,66 @@ export class Brand extends Model {
   @PrimaryKey
   @AutoIncrement
   @Column({})
+  @Field()
+  readonly i_id: number;
+
+  @ForeignKey(() => User)
+  @Column({})
+  @Field()
+  readonly i_createdByUserId: number;
+
+  @ForeignKey(() => User)
+  @Column({})
+  @Field()
+  readonly i_updatedByUserId: number;
+
+  @ForeignKey(() => User)
+  @Column({})
   @Field({ nullable: true })
-  public readonly i_id: number;
+  readonly i_deletedByUserId: number;
+
+  @BelongsTo(() => User, 'i_deletedByUserId')
+  static readonly deleteByUser: User;
 
   @Column({ type: DataType.TEXT })
-  @Field({ nullable: true })
-  public readonly n_brand: string;
+  @Field()
+  readonly n_brand: string;
 
   @Column({ type: DataType.TEXT })
-  @Field({ nullable: true })
-  public readonly n_photo: string;
+  @Field()
+  readonly n_photo: string;
 
   @Column({ type: DataType.BOOLEAN })
-  @Field({ nullable: true })
-  public readonly c_active: boolean;
+  @Field()
+  readonly c_active: boolean;
 
   @CreatedAt
-  @Field({ nullable: true })
-  public readonly d_createdAt: Date;
+  @Field()
+  readonly d_createdAt: Date;
 
   @UpdatedAt
-  @Field({ nullable: true })
-  public readonly d_updatedAt: Date;
+  @Field()
+  readonly d_updatedAt: Date;
 
   @DeletedAt
   @Field({ nullable: true })
-  public readonly d_deletedAt: Date;
+  readonly d_deletedAt: Date;
+
+  @BelongsTo(() => User, 'i_createdByUserId')
+  static readonly createdByUser: User;
+
+  @BelongsTo(() => User, 'i_updatedByUserId')
+  static readonly updateByUser: User;
 
   @HasMany(() => Product)
-  public readonly products: Product[]
+  readonly products: Product[]
 }
 
 @ObjectType()
 export class BrandModel {
-  @Field({ nullable: true })
-  public readonly count: number
+  @Field()
+  readonly count: number
 
   @Field(() => [Brand], { nullable: 'itemsAndList' })
-  public readonly rows: Brand[]
+  readonly rows: Brand[]
 }

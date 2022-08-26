@@ -2,15 +2,11 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Brand {
+type Role {
   i_id: Float
-  n_brand: String
-  n_photo: String
-  c_active: Boolean
+  n_role: String!
   d_createdAt: DateTime
   d_updatedAt: DateTime
-  d_deletedAt: DateTime
-  products: ProductModel!
 }
 
 """
@@ -18,64 +14,77 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-type BrandModel {
-  count: Float
-  rows: [Brand]
-}
-
-type ProductStatus {
+type User {
   i_id: Float
-  n_status: String
+  i_roles_id: Float!
+  n_name: String!
+  n_email: String!
+  c_active: Boolean!
   d_createdAt: DateTime
   d_updatedAt: DateTime
+  d_lastLoginAt: DateTime
+  d_deletedAt: DateTime
+}
+
+type UserModel {
+  count: Float
+  rows: [User]
+}
+
+type Brand {
+  i_id: Float!
+  i_createdByUserId: Float!
+  i_updatedByUserId: Float!
+  i_deletedByUserId: Float
+  n_brand: String!
+  n_photo: String!
+  c_active: Boolean!
+  d_createdAt: DateTime!
+  d_updatedAt: DateTime!
   d_deletedAt: DateTime
   products: ProductModel!
 }
 
+type BrandModel {
+  count: Float!
+  rows: [Brand]
+}
+
+type ProductStatus {
+  i_id: Float!
+  n_status: String!
+  d_createdAt: DateTime!
+  d_updatedAt: DateTime!
+  products: ProductModel!
+}
+
 type ProductStatusModel {
-  count: Float
+  count: Float!
   rows: [ProductStatus]
 }
 
 type Product {
-  i_id: Float
-  i_brands_id: Float
-  i_product_status_id: Float
-  n_product: String
-  n_stock: Float
-  n_price: Float
-  n_photo: String
-  d_createdAt: DateTime
-  d_updatedAt: DateTime
+  i_id: Float!
+  i_createdByUserId: Float!
+  i_updatedByUserId: Float!
+  i_deletedByUserId: Float
+  i_brandId: Float!
+  i_productStatusId: Float!
+  n_product: String!
+  n_stock: Float!
+  n_price: Float!
+  n_photo: String!
+  d_scheduleTime: DateTime
+  d_createdAt: DateTime!
+  d_updatedAt: DateTime!
   d_deletedAt: DateTime
   brand: BrandModel!
   status: ProductStatusModel!
 }
 
 type ProductModel {
-  count: Float
+  count: Float!
   rows: [Product]
-}
-
-type Role {
-  i_id: Float
-  n_role: String!
-  d_createdAt: DateTime
-  d_updatedAt: DateTime
-  d_deletedAt: DateTime
-}
-
-type User {
-  i_id: Float
-  i_roles_id: Float!
-  n_name: String!
-  n_email: String!
-  n_password: String!
-  c_active: Boolean!
-  d_createdAt: DateTime
-  d_updatedAt: DateTime
-  d_lastLoginAt: DateTime
-  d_deletedAt: DateTime
 }
 
 type Token {
@@ -97,8 +106,8 @@ input Options {
 
 input FilterProduct {
   i_id: Float
-  i_brands_id: Float
-  i_product_status_id: Float
+  i_brandId: Float
+  i_productStatusId: Float
   n_product: String
   n_stock: Float
   n_price: Float
@@ -133,7 +142,7 @@ type Mutation {
   createProductStatus(createProductStatus: CreateProductStatus!): ProductStatusModel!
   updateProductStatus(updateProduct: UpdateProductStatus!): ProductStatusModel!
   removeProductStatus(id: Float!): ProductStatusModel!
-  register(register: RegisterDto!): User!
+  register(register: RegisterUser!): UserModel!
   login(login: LoginDto!): Token!
   createBrand(createBrand: CreateBrand!): BrandModel!
   updateBrand(updateBrand: UpdateBrand!): BrandModel!
@@ -144,8 +153,8 @@ type Mutation {
 }
 
 input CreateProduct {
-  i_brands_id: Float!
-  i_product_status_id: Float!
+  i_brandId: Float!
+  i_productStatusId: Float!
   n_product: String!
   n_stock: Float!
   n_price: Float!
@@ -153,8 +162,8 @@ input CreateProduct {
 }
 
 input UpdateProduct {
-  i_brands_id: Float
-  i_product_status_id: Float
+  i_brandId: Float
+  i_productStatusId: Float
   n_product: String
   n_stock: Float
   n_price: Float
@@ -171,7 +180,7 @@ input UpdateProductStatus {
   id: Float!
 }
 
-input RegisterDto {
+input RegisterUser {
   email: String!
   password: String!
   name: String!
@@ -185,13 +194,13 @@ input LoginDto {
 input CreateBrand {
   n_brand: String!
   n_photo: String!
-  c_active: String!
+  c_active: Boolean!
 }
 
 input UpdateBrand {
   n_brand: String
   n_photo: String
-  c_active: String
+  c_active: Boolean
   id: Float!
 }
 

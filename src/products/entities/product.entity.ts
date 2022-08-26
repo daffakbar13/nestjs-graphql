@@ -1,6 +1,7 @@
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
-import { Table, Column, Model, DataType, ForeignKey, BelongsTo, PrimaryKey, AutoIncrement, CreatedAt, UpdatedAt, DeletedAt } from 'sequelize-typescript';
+import { Table, Column, Model, DataType, ForeignKey, BelongsTo, PrimaryKey, AutoIncrement, CreatedAt, UpdatedAt, DeletedAt, Unique } from 'sequelize-typescript';
 import { Brand } from 'src/brands/entities/brand.entity';
+import { User } from 'src/users/entities/user.entity';
 import { ProductStatus } from './product-status.entity';
 
 @Table({
@@ -13,59 +14,88 @@ export class Product extends Model {
   @PrimaryKey
   @AutoIncrement
   @Column({})
+  @Field()
+  readonly i_id: number;
+
+  @ForeignKey(() => User)
+  @Column({})
+  @Field()
+  readonly i_createdByUserId: number;
+
+  @BelongsTo(() => User, 'i_createdByUserId')
+  static readonly createdByUser: User;
+
+  @ForeignKey(() => User)
+  @Column({})
+  @Field()
+  readonly i_updatedByUserId: number;
+
+  @BelongsTo(() => User, 'i_updatedByUserId')
+  static readonly updateByUser: User;
+
+  @ForeignKey(() => User)
+  @Column({})
   @Field({ nullable: true })
-  public readonly i_id?: number;
+  readonly i_deletedByUserId: number;
+
+  @BelongsTo(() => User, 'i_deletedByUserId')
+  static readonly deleteByUser: User;
 
   @ForeignKey(() => Brand)
-  @Column({ type: DataType.INTEGER })
-  @Field({ nullable: true })
-  public readonly i_brands_id?: number;
+  @Column({})
+  @Field()
+  readonly i_brandId: number;
 
   @BelongsTo(() => Brand)
-  static readonly brand?: Brand;
+  static readonly brand: Brand;
 
   @ForeignKey(() => ProductStatus)
-  @Column({ type: DataType.INTEGER })
-  @Field({ nullable: true })
-  public readonly i_product_status_id?: number;
+  @Column({})
+  @Field()
+  readonly i_productStatusId: number;
 
   @BelongsTo(() => ProductStatus)
-  public readonly status?: ProductStatus;
+  readonly status: ProductStatus;
 
+  @Unique
   @Column({ type: DataType.TEXT })
-  @Field({ nullable: true })
-  public readonly n_product?: string;
+  @Field()
+  readonly n_product: string;
 
   @Column({ type: DataType.BIGINT })
-  @Field({ nullable: true })
-  public readonly n_stock?: number;
+  @Field()
+  readonly n_stock: number;
 
   @Column({ type: DataType.BIGINT })
-  @Field({ nullable: true })
-  public readonly n_price?: number;
+  @Field()
+  readonly n_price: number;
 
   @Column({ type: DataType.TEXT })
+  @Field()
+  readonly n_photo: string;
+
+  @Column({})
   @Field({ nullable: true })
-  public readonly n_photo?: string;
+  readonly d_scheduleTime: Date;
 
   @CreatedAt
-  @Field({ nullable: true })
-  public readonly d_createdAt?: Date;
+  @Field()
+  readonly d_createdAt: Date;
 
   @UpdatedAt
-  @Field({ nullable: true })
-  public readonly d_updatedAt?: Date;
+  @Field()
+  readonly d_updatedAt: Date;
 
   @DeletedAt
   @Field({ nullable: true })
-  public readonly d_deletedAt?: Date;
+  readonly d_deletedAt: Date;
 }
 
 @ObjectType()
 export class ProductModel {
-  @Field({ nullable: true })
-  public readonly count: number
+  @Field()
+  readonly count: number
 
   @Field(() => [Product], { nullable: 'itemsAndList' })
-  public readonly rows: Product[]
+  readonly rows: Product[]
 }
