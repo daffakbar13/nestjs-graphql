@@ -3,6 +3,8 @@ import { Table, Column, Model, DataType, HasMany, ForeignKey, BelongsTo, AutoInc
 import { Brand } from 'src/brands/entities/brand.entity';
 import { Product } from 'src/products/entities/product.entity';
 import { Role } from 'src/auth/entities/role.entity';
+import { Payment } from 'src/payments/entities/payment.entity';
+import { Selling } from 'src/sellings/entities/selling.entity';
 
 @Table({
   tableName: 'users',
@@ -19,7 +21,7 @@ export class User extends Model {
   @ForeignKey(() => Role)
   @Column({})
   @Field()
-  readonly i_roles_id: number;
+  readonly i_rolesId: number;
 
   @BelongsTo(() => Role)
   readonly role: Role;
@@ -73,8 +75,17 @@ export class User extends Model {
   @HasMany(() => Brand, 'i_deletedByUserId')
   readonly brandDeleted: Brand[]
 
-  // @HasMany(() => Logger)
-  // logs: Logger[]
+  @HasMany(() => Payment, 'i_createdByUserId')
+  readonly paymentCreated: Payment[]
+
+  @HasMany(() => Payment, 'i_updatedByUserId')
+  readonly paymentUpdated: Payment[]
+
+  @HasMany(() => Payment, 'i_deletedByUserId')
+  readonly paymentDeleted: Payment[]
+
+  @HasMany(() => Selling)
+  readonly selling: Selling[]
 }
 
 @ObjectType()

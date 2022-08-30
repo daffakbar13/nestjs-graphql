@@ -30,9 +30,6 @@ export class Brand extends Model {
   @Field({ nullable: true })
   readonly i_deletedByUserId: number;
 
-  @BelongsTo(() => User, 'i_deletedByUserId')
-  static readonly deleteByUser: User;
-
   @Column({ type: DataType.TEXT })
   @Field()
   readonly n_brand: string;
@@ -61,7 +58,10 @@ export class Brand extends Model {
   static readonly createdByUser: User;
 
   @BelongsTo(() => User, 'i_updatedByUserId')
-  static readonly updateByUser: User;
+  static readonly updatedByUser: User;
+
+  @BelongsTo(() => User, 'i_deletedByUserId')
+  static readonly deletedByUser: User;
 
   @HasMany(() => Product)
   readonly products: Product[]

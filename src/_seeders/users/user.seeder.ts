@@ -12,8 +12,8 @@ export class SeedUser implements OnSeederInit {
         const data = [
             {
                 i_roles_id: 1,
-                n_name: 'user',
-                n_email: 'user@gmail.com',
+                n_name: 'customer',
+                n_email: 'customer@gmail.com',
                 n_password: this.encodePassword('success100%'),
                 c_active: true,
             }

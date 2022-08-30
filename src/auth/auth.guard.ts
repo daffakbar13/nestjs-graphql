@@ -35,7 +35,7 @@ export const PermissionGuard = (permission: Permissions): Type<CanActivate> => {
             const ctx = GqlExecutionContext.create(context);
             const token = ctx.getContext().req.headers.authorization;
             const user = await this.authService.getUserByToken(token as unknown as string)
-            const role = await this.authService.getRoleByUser({ i_id: user.i_roles_id })
+            const role = await this.authService.getRoleByUser({ i_id: user.i_rolesId })
 
             console.log(role?.permissions, 1);
 

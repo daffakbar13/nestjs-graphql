@@ -2,9 +2,41 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type SellingProduct {
+  i_id: Float!
+  i_sellingId: Float!
+  n_product: String!
+  n_brand: String!
+  n_quantity: Float!
+  n_price: Float!
+  total: Float!
+  n_photo: String!
+}
+
+type Selling {
+  i_id: Float!
+  i_usersId: Float!
+  i_sellingAddressId: Float!
+  i_paymentId: Float!
+  n_invoice: String!
+  n_grandTotal: String!
+  n_status: String!
+  d_createdAt: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type SellingModel {
+  count: Float!
+  rows: [Selling]
+}
+
 type User {
   i_id: Float
-  i_roles_id: Float!
+  i_rolesId: Float!
   n_name: String!
   n_email: String!
   c_active: Boolean!
@@ -13,11 +45,6 @@ type User {
   d_lastLoginAt: DateTime
   d_deletedAt: DateTime
 }
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
 
 type UserModel {
   count: Float
@@ -84,10 +111,16 @@ type Token {
   token: String!
 }
 
+type PaymentModel {
+  count: Float!
+}
+
 type Query {
   product(options: Options, filter: FilterProduct): ProductModel!
   productStatus(options: Options, filter: FilterProductStatus): ProductStatusModel!
   brands(options: Options, filter: FilterBrand): BrandModel!
+  Selling(options: Options, filter: FilterSelling): SellingModel!
+  payment(options: Options, filter: FilterPayment): PaymentModel!
 }
 
 input Options {
@@ -126,6 +159,26 @@ input FilterBrand {
   d_deletedAt: DateTime
 }
 
+input FilterSelling {
+  i_id: Float
+  n_accountName: String!
+  n_accountNumber: String!
+  n_SellingMethod: String!
+  d_createdAt: DateTime
+  d_updatedAt: DateTime
+  d_deletedAt: DateTime
+}
+
+input FilterPayment {
+  i_id: Float
+  n_accountName: String!
+  n_accountNumber: String!
+  n_paymentMethod: String!
+  d_createdAt: DateTime
+  d_updatedAt: DateTime
+  d_deletedAt: DateTime
+}
+
 type Mutation {
   createProduct(createProduct: CreateProduct!): ProductModel!
   updateProduct(updateProduct: UpdateProduct!): ProductModel!
@@ -140,6 +193,12 @@ type Mutation {
   createBrand(createBrand: CreateBrand!): BrandModel!
   updateBrand(updateBrand: UpdateBrand!): BrandModel!
   removeBrand(id: Float!): BrandModel!
+  createSelling(createSelling: CreateSelling!): SellingModel!
+  updateSelling(updateSelling: UpdateSelling!): SellingModel!
+  removeSelling(id: Float!): SellingModel!
+  createPayment(createPayment: CreatePayment!): PaymentModel!
+  updatePayment(updatePayment: UpdatePayment!): PaymentModel!
+  removePayment(id: Float!): PaymentModel!
 }
 
 input CreateProduct {
@@ -191,5 +250,31 @@ input UpdateBrand {
   n_brand: String
   n_photo: String
   c_active: Boolean
+  id: Float!
+}
+
+input CreateSelling {
+  n_accountName: String!
+  n_accountNumber: String!
+  n_SellingMethod: String!
+}
+
+input UpdateSelling {
+  n_accountName: String
+  n_accountNumber: String
+  n_SellingMethod: String
+  id: Float!
+}
+
+input CreatePayment {
+  n_accountName: String!
+  n_accountNumber: String!
+  n_paymentMethod: String!
+}
+
+input UpdatePayment {
+  n_accountName: String
+  n_accountNumber: String
+  n_paymentMethod: String
   id: Float!
 }

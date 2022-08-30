@@ -1,16 +1,16 @@
 import AdminPermissions from "./admin.permissions";
 import SuperAdminPermissions from "./super-admin.permissions";
-import UserPermissions from "./user.permissions";
+import CustomerPermissions from "./customer.permissions";
 
 const Permissions = {
     ...AdminPermissions,
-    ...UserPermissions,
+    ...CustomerPermissions,
     ...SuperAdminPermissions
 }
 
 type Permissions =
     | AdminPermissions
-    | UserPermissions
+    | CustomerPermissions
     | SuperAdminPermissions
 
 export default Permissions

@@ -16,6 +16,11 @@ import { SeederModule } from 'nestjs-sequelize-seeder';
 import { Dialect } from 'sequelize/types';
 import { SellingsModule } from './sellings/sellings.module';
 import { PaymentsModule } from './payments/payments.module';
+import { Payment } from './payments/entities/payment.entity';
+import { SeedersModule } from './_seeders/seeders.module';
+import { Selling } from './sellings/entities/selling.entity';
+import { SellingAddress } from './sellings/entities/selling-address.entity';
+import { SellingProduct } from './sellings/entities/selling-product.entity';
 
 config({ path: resolve(__dirname, '../.env') })
 
@@ -23,7 +28,7 @@ config({ path: resolve(__dirname, '../.env') })
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      autoSchemaFile: join(process.cwd(), 'schema.gql'),
     }),
     SequelizeModule.forRoot({
       dialect: process.env.DB as Dialect,
@@ -37,7 +42,11 @@ config({ path: resolve(__dirname, '../.env') })
         Brand,
         ProductStatus,
         Role,
-        User
+        User,
+        Payment,
+        Selling,
+        SellingAddress,
+        SellingProduct
       ],
       autoLoadModels: true,
       // sync: { alter: { drop: true }, force: true },
@@ -45,8 +54,9 @@ config({ path: resolve(__dirname, '../.env') })
     }),
     SeederModule.forRoot({
       isGlobal: true,
-      runOnlyIfTableIsEmpty: true
+      runOnlyIfTableIsEmpty: true,
     }),
+    SeedersModule,
     ProductsModule,
     BrandsModule,
     AuthModule,

@@ -10,8 +10,8 @@ import { config } from 'dotenv';
 import { resolve } from 'path';
 import { Role } from 'src/auth/entities/role.entity';
 import { SeederModule } from 'nestjs-sequelize-seeder';
-import { SeedRoleUser, SeedRoleAdmin, SeedRoleSuperAdmin } from 'src/_seeders/role.seeder';
-import { SeedUser, SeedAdmin, SeedSuperAdmin } from 'src/_seeders/user.seeder';
+import { SeedRoleUser, SeedRoleAdmin, SeedRoleSuperAdmin } from 'src/_seeders/roles/role.seeder';
+import { SeedUser, SeedAdmin, SeedSuperAdmin } from 'src/_seeders/users/user.seeder';
 
 config({ path: resolve(__dirname, '../../.env') })
 @Module({
@@ -24,14 +24,6 @@ config({ path: resolve(__dirname, '../../.env') })
       }),
     }),
     SequelizeModule.forFeature([User, Role]),
-    SeederModule.forFeature([
-      SeedUser,
-      SeedAdmin,
-      SeedSuperAdmin,
-      SeedRoleUser,
-      SeedRoleAdmin,
-      SeedRoleSuperAdmin
-    ])
   ],
   providers: [AuthService, AuthResolver, JwtStrategy],
   exports: [AuthService]

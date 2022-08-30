@@ -1,23 +1,23 @@
 import { OnSeederInit, Seeder } from "nestjs-sequelize-seeder";
 import AdminPermissions from "src/auth/permissions/admin.permissions";
 import SuperAdminPermissions from "src/auth/permissions/super-admin.permissions";
-import UserPermissions from "src/auth/permissions/user.permissions";
+import CustomerPermissions from "src/auth/permissions/customer.permissions";
 import { Role } from "src/auth/entities/role.entity";
 
 @Seeder({ model: Role })
 export class SeedRoleUser implements OnSeederInit {
     run() {
-        const user = UserPermissions
-        const userPermission = []
+        const customerPermissions = CustomerPermissions
+        const permissions = []
 
-        for (const key in user) {
-            userPermission.push(key)
+        for (const key in customerPermissions) {
+            permissions.push(key)
         }
 
         const data = [
             {
-                n_role: 'User',
-                permissions: userPermission
+                n_role: 'Customer',
+                permissions: permissions
             }
         ];
         return data

@@ -3,7 +3,7 @@ import { Table, Column, DataType, HasMany, Model, CreatedAt, DeletedAt, UpdatedA
 import { Product } from 'src/products/entities/product.entity';
 
 @Table({
-  tableName: 'm_productStatus',
+  tableName: 'm_product_status',
   freezeTableName: true
 })
 @ObjectType()

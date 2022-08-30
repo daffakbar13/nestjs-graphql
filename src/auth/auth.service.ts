@@ -6,7 +6,7 @@ import { User } from 'src/auth/entities/user.entity';
 import { LoginDto, RegisterUser } from './dto/auth.dto';
 import { config } from 'dotenv';
 import { resolve } from 'path';
-import UserPermission from 'src/auth/permissions/user.permissions';
+import UserPermission from 'src/auth/permissions/customer.permissions';
 import { Role } from 'src/auth/entities/role.entity';
 import { WhereOptions } from 'sequelize';
 import { FilterRole } from 'src/auth/dto/role.dto';
