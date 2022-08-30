@@ -2,7 +2,7 @@ import { Field, ObjectType } from '@nestjs/graphql';
 import { Table, Column, Model, DataType, HasMany, ForeignKey, BelongsTo, AutoIncrement, PrimaryKey, CreatedAt, DeletedAt, UpdatedAt } from 'sequelize-typescript';
 import { Brand } from 'src/brands/entities/brand.entity';
 import { Product } from 'src/products/entities/product.entity';
-import { Role } from 'src/roles/entities/role.entity';
+import { Role } from 'src/auth/entities/role.entity';
 
 @Table({
   tableName: 'users',

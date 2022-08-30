@@ -1,7 +1,7 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { AutoIncrement, BelongsTo, Column, CreatedAt, DataType, DeletedAt, ForeignKey, HasMany, Model, PrimaryKey, Table, UpdatedAt } from 'sequelize-typescript';
 import { Product } from 'src/products/entities/product.entity';
-import { User } from 'src/users/entities/user.entity';
+import { User } from 'src/auth/entities/user.entity';
 
 @Table({
   tableName: 't_brand',

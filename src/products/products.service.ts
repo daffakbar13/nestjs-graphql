@@ -17,9 +17,7 @@ export class ProductService {
 
   public async create(input: CreateProduct, token: string): Promise<{ count: number; rows: Product[] }> {
     const user = await this.authService.getUserByToken(token)
-    const newProduct = await this.repository.create(input, user);
-
-    return this.findAll({ i_id: newProduct.i_id })
+    return await this.repository.create(input, user);
   }
 
   public async findAll(filter?: FilterProduct, options?: Options): Promise<{ count: number; rows: Product[] }> {
@@ -31,15 +29,12 @@ export class ProductService {
 
   public async update(input: UpdateProduct, token: string): Promise<{ count: number; rows: Product[] }> {
     const user = await this.authService.getUserByToken(token)
-
-    await this.repository.update(input, user);
-
-    return this.findAll({ i_id: input.id })
+    return await this.repository.update(input, user);
   }
 
-  public async remove(filter: FilterProduct, token: string): Promise<void> {
+  public async remove(filter: FilterProduct, token: string): Promise<{ count: number; rows: Product[] }> {
     const user = await this.authService.getUserByToken(token)
-    await this.repository.remove(OptionsAuthorize(filter), user);
+    return await this.repository.remove(OptionsAuthorize(filter), user);
   }
 }
 
@@ -49,22 +44,22 @@ export class ProductStatusService {
     private readonly repository: ProductStatusRepository
   ) { }
 
-  public create(input: CreateProductStatus): Promise<ProductStatus> {
-    return this.repository.create(input);
+  public async create(input: CreateProductStatus): Promise<{ count: number; rows: ProductStatus[] }> {
+    return await this.repository.create(input);
   }
 
-  public async findAll(options: Options, filter: FilterProductStatus): Promise<{ count: number; rows: ProductStatus[] }> {
+  public async findAll(filter: FilterProductStatus, options?: Options): Promise<{ count: number; rows: ProductStatus[] }> {
     return this.repository.findAll(
       OptionsAuthorize(filter),
       OptionsAuthorize(options)
     )
   }
 
-  public async update(input: UpdateProductStatus): Promise<void> {
-    await this.repository.update(input);
+  public async update(input: UpdateProductStatus): Promise<{ count: number; rows: ProductStatus[] }> {
+    return await this.repository.update(input);
   }
 
-  public async remove(filter: FilterProductStatus): Promise<void> {
-    await this.repository.remove(OptionsAuthorize(filter));
+  public async remove(filter: FilterProductStatus): Promise<{ count: number; rows: ProductStatus[] }> {
+    return await this.repository.remove(OptionsAuthorize(filter));
   }
 }

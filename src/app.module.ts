@@ -7,17 +7,15 @@ import { ProductsModule } from './products/products.module';
 import { BrandsModule } from './brands/brands.module';
 import { Product } from './products/entities/product.entity';
 import { Brand } from './brands/entities/brand.entity';
-import { RolesModule } from './roles/roles.module';
-import { UsersModule } from './users/users.module';
-import { LoggerModule } from './logger/logger.module';
-import { PaymentsModule } from './payments/payments.module';
-import { SellingsModule } from './sellings/sellings.module';
-import { StatusSellingsModule } from './status_sellings/status_sellings.module';
 import { config } from 'dotenv'
 import { ProductStatus } from './products/entities/product-status.entity';
 import { AuthModule } from './auth/auth.module';
-import { Role } from './roles/entities/role.entity';
-import { User } from './users/entities/user.entity';
+import { Role } from './auth/entities/role.entity';
+import { User } from './auth/entities/user.entity';
+import { SeederModule } from 'nestjs-sequelize-seeder';
+import { Dialect } from 'sequelize/types';
+import { SellingsModule } from './sellings/sellings.module';
+import { PaymentsModule } from './payments/payments.module';
 
 config({ path: resolve(__dirname, '../.env') })
 
@@ -28,7 +26,7 @@ config({ path: resolve(__dirname, '../.env') })
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
     }),
     SequelizeModule.forRoot({
-      dialect: 'postgres',
+      dialect: process.env.DB as Dialect,
       host: process.env.DB_HOST,
       port: parseInt(process.env.DB_PORT),
       username: process.env.DB_USERNAME,
@@ -42,18 +40,18 @@ config({ path: resolve(__dirname, '../.env') })
         User
       ],
       autoLoadModels: true,
-      sync: { alter: false },
+      // sync: { alter: { drop: true }, force: true },
       synchronize: true,
+    }),
+    SeederModule.forRoot({
+      isGlobal: true,
+      runOnlyIfTableIsEmpty: true
     }),
     ProductsModule,
     BrandsModule,
     AuthModule,
-    RolesModule,
-    UsersModule,
-    // LoggerModule,
-    // PaymentsModule,
-    // SellingsModule,
-    // StatusSellingsModule,
+    SellingsModule,
+    PaymentsModule,
   ],
 })
 export class AppModule { }

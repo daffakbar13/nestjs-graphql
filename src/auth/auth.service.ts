@@ -1,28 +1,38 @@
 import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
-import { UserService } from 'src/users/users.service';
 import { InjectModel } from '@nestjs/sequelize';
-import { User } from 'src/users/entities/user.entity';
+import { User } from 'src/auth/entities/user.entity';
 import { LoginDto, RegisterUser } from './dto/auth.dto';
-import { CreateUserInput } from 'src/users/dto/user.dto';
 import { config } from 'dotenv';
 import { resolve } from 'path';
+import UserPermission from 'src/auth/permissions/user.permissions';
+import { Role } from 'src/auth/entities/role.entity';
+import { WhereOptions } from 'sequelize';
+import { FilterRole } from 'src/auth/dto/role.dto';
+import { CreateUserInput } from './dto/user.dto';
 
 config({ path: resolve(__dirname, '../../.env') })
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly userService: UserService,
     private readonly jwtService: JwtService
   ) { }
   @InjectModel(User)
-  private readonly repository: typeof User;
+  private readonly user: typeof User;
+  @InjectModel(Role)
+  private readonly role: typeof Role
 
   public async register(body: RegisterUser): Promise<{ count: number, rows: User[] }> {
     const { name, email, password } = body;
-    const user = await this.userService.findAll(null, { n_email: email })
+    const user = await this.user.findAndCountAll({ where: { n_email: email } })
+    const userPermission = UserPermission
+    const permission = []
+
+    for (const key in userPermission) {
+      permission.push(key)
+    }
 
     if (user.count != 0) { throw new HttpException('Conflict', HttpStatus.CONFLICT); }
 
@@ -34,31 +44,25 @@ export class AuthService {
       c_active: true,
     }
 
-    const result = await this.userService.create(input)
+    const result = await this.user.create(input as any)
 
-    return this.userService.findAll(null, { i_id: result.i_id })
+    return this.user.findAndCountAll({ where: { i_id: result.i_id } })
   }
 
   public async login(body: LoginDto): Promise<string | never> {
     const { email, password }: LoginDto = body;
-    const user: User = await this.userService.findOne({ n_email: email })
+    const user: User = await this.user.findOne({ where: { n_email: email } })
     const isPasswordValid: boolean = this.isPasswordValid(password, user.n_password);
 
     if (!isPasswordValid) { throw new HttpException('No user found', HttpStatus.NOT_FOUND); }
 
-    this.userService.update({
-      id: user.i_id,
-      d_lastLoginAt: new Date()
-    })
+    await this.user.update({ d_lastLoginAt: new Date() }, { where: { i_id: user.i_id, } })
 
     return this.generateToken(user);
   }
 
   public async refresh(user: User): Promise<string> {
-    this.userService.update({
-      id: user.i_id,
-      d_lastLoginAt: new Date()
-    })
+    await this.user.update({ d_lastLoginAt: new Date() }, { where: { id: user.i_id } })
 
     return this.generateToken(user);
   }
@@ -66,7 +70,11 @@ export class AuthService {
   public async getUserByToken(token: string): Promise<User> {
     const decodeToken = this.jwtService.verify(token, { secret: process.env.JWT_SECRET, })
 
-    return await this.userService.findOne({ n_email: decodeToken.email })
+    return await this.user.findOne({ where: { n_email: decodeToken.email } })
+  }
+
+  public async getRoleByUser(filter: FilterRole): Promise<Role> {
+    return await this.role.findOne({ where: filter as WhereOptions })
   }
 
   // Decoding the JWT Token
@@ -76,7 +84,7 @@ export class AuthService {
 
   // Get User by User ID we get from decode()
   public async validateUser(decoded: any): Promise<User> {
-    return this.repository.findOne(decoded.id);
+    return this.user.findOne(decoded.id);
   }
 
   // Generate JWT Token

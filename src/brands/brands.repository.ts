@@ -1,6 +1,6 @@
 import { InjectModel } from "@nestjs/sequelize";
 import { WhereOptions } from "sequelize";
-import { User } from "src/users/entities/user.entity";
+import { User } from "src/auth/entities/user.entity";
 import { CheckAvailibility } from "src/utils/notfound-exception";
 import { Options } from "src/utils/options";
 import { OptionsAuthorize } from "src/utils/options-authorize";

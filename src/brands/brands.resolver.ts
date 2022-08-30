@@ -1,6 +1,7 @@
 import { UseGuards } from '@nestjs/common';
 import { Resolver, Query, Mutation, Args, Parent, ResolveField } from '@nestjs/graphql';
-import { JwtAuthGuard } from 'src/auth/auth.guard';
+import { JwtAuthGuard, PermissionGuard } from 'src/auth/auth.guard';
+import { BrandPermission } from 'src/auth/permissions/enums/brand.enum';
 import { ProductModel } from 'src/products/entities/product.entity';
 import { ProductService } from 'src/products/products.service';
 import { CurrentUser } from 'src/utils/current-user';
@@ -15,7 +16,7 @@ export class BrandResolver {
     private readonly brandService: BrandService,
     private readonly productService: ProductService
   ) { }
-
+  @UseGuards(PermissionGuard(BrandPermission.CreateBrand))
   @Mutation(() => BrandModel)
   protected async createBrand(
     @Args(CreateBrand.KEY) input: CreateBrand,

@@ -18,7 +18,7 @@ export class UpdateProductStatus extends PartialType(CreateProductStatus) {
 
     @Field()
     @IsInt()
-    public readonly id: number;
+    public readonly id?: number;
 }
 
 @InputType()

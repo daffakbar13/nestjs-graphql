@@ -1,4 +1,5 @@
 import { InputType, Field, PartialType } from '@nestjs/graphql';
+import Permissions from 'src/auth/permissions/index.permissions';
 
 @InputType()
 export class CreateUserInput {

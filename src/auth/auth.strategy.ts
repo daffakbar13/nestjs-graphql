@@ -3,7 +3,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { config } from 'dotenv';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { resolve } from 'path';
-import { User } from 'src/users/entities/user.entity';
+import { User } from 'src/auth/entities/user.entity';
 import { AuthService } from './auth.service';
 
 config({ path: resolve(__dirname, '../../.env') })
