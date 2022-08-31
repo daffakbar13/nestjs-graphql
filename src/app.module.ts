@@ -15,12 +15,12 @@ import { User } from './auth/entities/user.entity';
 import { SeederModule } from 'nestjs-sequelize-seeder';
 import { Dialect } from 'sequelize/types';
 import { SellingsModule } from './sellings/sellings.module';
-import { PaymentsModule } from './payments/payments.module';
-import { Payment } from './payments/entities/payment.entity';
 import { SeedersModule } from './_seeders/seeders.module';
 import { Selling } from './sellings/entities/selling.entity';
 import { SellingAddress } from './sellings/entities/selling-address.entity';
 import { SellingProduct } from './sellings/entities/selling-product.entity';
+import { PaymentMethod } from './payment_methods/entities/payment_method.entity';
+import { PaymentMethodsModule } from './payment_methods/payment_methods.module';
 
 config({ path: resolve(__dirname, '../.env') })
 
@@ -43,7 +43,7 @@ config({ path: resolve(__dirname, '../.env') })
         ProductStatus,
         Role,
         User,
-        Payment,
+        PaymentMethod,
         Selling,
         SellingAddress,
         SellingProduct
@@ -54,14 +54,15 @@ config({ path: resolve(__dirname, '../.env') })
     }),
     SeederModule.forRoot({
       isGlobal: true,
-      runOnlyIfTableIsEmpty: true,
+      // runOnlyIfTableIsEmpty: true,
+      disabled: true
     }),
     SeedersModule,
     ProductsModule,
     BrandsModule,
     AuthModule,
     SellingsModule,
-    PaymentsModule,
+    PaymentMethodsModule,
   ],
 })
 export class AppModule { }

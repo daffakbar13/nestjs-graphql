@@ -5,7 +5,7 @@ import CustomerPermissions from "src/auth/permissions/customer.permissions";
 import { Role } from "src/auth/entities/role.entity";
 
 @Seeder({ model: Role })
-export class SeedRoleUser implements OnSeederInit {
+export class SeedRoleCustomer implements OnSeederInit {
     run() {
         const customerPermissions = CustomerPermissions
         const permissions = []

@@ -6,7 +6,7 @@ export class CreateUserInput {
     static readonly KEY = 'createProductInput'
 
     @Field()
-    i_roles_id: number;
+    i_rolesId: number;
 
     @Field()
     n_name: string;
@@ -25,7 +25,7 @@ export class CreateUserInput {
 export class UpdateUserInput extends PartialType(CreateUserInput) {
     static readonly KEY = 'updateUserInput'
     @Field()
-    id: number;
+    id?: number;
 
     @Field({ nullable: true })
     d_lastLoginAt?: Date;
@@ -43,7 +43,7 @@ export class LimitUser {
 }
 
 @InputType()
-export class FindUser {
+export class FilterUser {
     static readonly KEY = 'findUserInput'
 
     @Field({ nullable: true })

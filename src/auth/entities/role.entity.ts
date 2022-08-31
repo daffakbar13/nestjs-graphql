@@ -33,3 +33,12 @@ export class Role extends Model {
   @HasMany(() => User)
   users: User[]
 }
+
+@ObjectType()
+export class RoleModel {
+  @Field()
+  public readonly count: number
+
+  @Field(() => [Role], { nullable: 'itemsAndList' })
+  public readonly rows: Role[]
+}

@@ -15,87 +15,87 @@ export class Product extends Model {
   @AutoIncrement
   @Column({})
   @Field()
-  readonly i_id: number;
+  public readonly i_id: number;
 
   @ForeignKey(() => User)
   @Column({})
   @Field()
-  readonly i_createdByUserId: number;
+  public readonly i_createdByUserId: number;
 
   @BelongsTo(() => User, 'i_createdByUserId')
-  static readonly createdByUser: User;
+  public static readonly createdByUser: User;
 
   @ForeignKey(() => User)
   @Column({})
   @Field()
-  readonly i_updatedByUserId: number;
+  public readonly i_updatedByUserId: number;
 
   @BelongsTo(() => User, 'i_updatedByUserId')
-  static readonly updateByUser: User;
+  public static readonly updateByUser: User;
 
   @ForeignKey(() => User)
   @Column({})
   @Field({ nullable: true })
-  readonly i_deletedByUserId: number;
+  public readonly i_deletedByUserId: number;
 
   @BelongsTo(() => User, 'i_deletedByUserId')
-  static readonly deleteByUser: User;
+  public static readonly deleteByUser: User;
 
   @ForeignKey(() => Brand)
   @Column({})
   @Field()
-  readonly i_brandId: number;
+  public readonly i_brandId: number;
 
   @BelongsTo(() => Brand)
-  static readonly brand: Brand;
+  public static readonly brand: Brand;
 
   @ForeignKey(() => ProductStatus)
   @Column({})
   @Field()
-  readonly i_productStatusId: number;
+  public readonly i_productStatusId: number;
 
   @BelongsTo(() => ProductStatus)
-  readonly status: ProductStatus;
+  public readonly status: ProductStatus;
 
   @Unique
   @Column({ type: DataType.TEXT })
   @Field()
-  readonly n_product: string;
+  public readonly n_product: string;
 
   @Column({ type: DataType.BIGINT })
   @Field()
-  readonly n_stock: number;
+  public readonly n_stock: number;
 
   @Column({ type: DataType.BIGINT })
   @Field()
-  readonly n_price: number;
+  public readonly n_price: number;
 
   @Column({ type: DataType.TEXT })
   @Field()
-  readonly n_photo: string;
+  public readonly n_photo: string;
 
   @Column({})
   @Field({ nullable: true })
-  readonly d_scheduleTime: Date;
+  public readonly d_scheduleTime: Date;
 
   @CreatedAt
   @Field()
-  readonly d_createdAt: Date;
+  public readonly d_createdAt: Date;
 
   @UpdatedAt
   @Field()
-  readonly d_updatedAt: Date;
+  public readonly d_updatedAt: Date;
 
   @DeletedAt
   @Field({ nullable: true })
-  readonly d_deletedAt: Date;
+  public readonly d_deletedAt: Date;
 }
 
 @ObjectType()
 export class ProductModel {
   @Field()
-  readonly count: number
+  public readonly count: number
 
   @Field(() => [Product], { nullable: 'itemsAndList' })
-  readonly rows: Product[]
+  public readonly rows: Product[]
 }

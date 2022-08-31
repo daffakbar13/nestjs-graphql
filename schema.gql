@@ -2,6 +2,41 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Role {
+  i_id: Float
+  n_role: String!
+  d_createdAt: DateTime
+  d_updatedAt: DateTime
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type RoleModel {
+  count: Float!
+  rows: [Role]
+}
+
+type PaymentMethod {
+  i_id: Float!
+  i_createdByUserId: Float!
+  i_updatedByUserId: Float!
+  i_deletedByUserId: Float
+  n_accountName: String!
+  n_accountNumber: String!
+  n_paymentMethod: String!
+  d_createdAt: DateTime!
+  d_updatedAt: DateTime!
+  d_deletedAt: DateTime
+}
+
+type PaymentMethodModel {
+  count: Float!
+  rows: [PaymentMethod]
+}
+
 type SellingProduct {
   i_id: Float!
   i_sellingId: Float!
@@ -24,11 +59,6 @@ type Selling {
   d_createdAt: DateTime!
 }
 
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
-
 type SellingModel {
   count: Float!
   rows: [Selling]
@@ -44,6 +74,7 @@ type User {
   d_updatedAt: DateTime
   d_lastLoginAt: DateTime
   d_deletedAt: DateTime
+  brand: RoleModel!
 }
 
 type UserModel {
@@ -111,21 +142,19 @@ type Token {
   token: String!
 }
 
-type PaymentModel {
-  count: Float!
-}
-
 type Query {
   product(options: Options, filter: FilterProduct): ProductModel!
   productStatus(options: Options, filter: FilterProductStatus): ProductStatusModel!
   brands(options: Options, filter: FilterBrand): BrandModel!
   Selling(options: Options, filter: FilterSelling): SellingModel!
-  payment(options: Options, filter: FilterPayment): PaymentModel!
+  PaymentMethods(options: Options, filter: FilterPaymentMethod): PaymentMethodModel!
 }
 
 input Options {
   limit: Float
   offset: Float
+  tes: [FilterProduct]
+  order: [[String]]
 }
 
 input FilterProduct {
@@ -169,11 +198,14 @@ input FilterSelling {
   d_deletedAt: DateTime
 }
 
-input FilterPayment {
+input FilterPaymentMethod {
   i_id: Float
-  n_accountName: String!
-  n_accountNumber: String!
-  n_paymentMethod: String!
+  i_createdByUserId: Float
+  i_updatedByUserId: Float
+  i_deletedByUserId: Float
+  n_accountName: String
+  n_accountNumber: String
+  n_paymentMethod: String
   d_createdAt: DateTime
   d_updatedAt: DateTime
   d_deletedAt: DateTime
@@ -196,9 +228,9 @@ type Mutation {
   createSelling(createSelling: CreateSelling!): SellingModel!
   updateSelling(updateSelling: UpdateSelling!): SellingModel!
   removeSelling(id: Float!): SellingModel!
-  createPayment(createPayment: CreatePayment!): PaymentModel!
-  updatePayment(updatePayment: UpdatePayment!): PaymentModel!
-  removePayment(id: Float!): PaymentModel!
+  createPaymentMethod(createPaymentMethod: CreatePaymentMethod!): PaymentMethodModel!
+  updatePaymentMethod(updatePaymentMethod: UpdatePaymentMethod!): PaymentMethodModel!
+  removePaymentMethod(id: Float!): PaymentMethodModel!
 }
 
 input CreateProduct {
@@ -208,6 +240,7 @@ input CreateProduct {
   n_stock: Float!
   n_price: Float!
   n_photo: String!
+  d_scheduleTime: DateTime
 }
 
 input UpdateProduct {
@@ -217,6 +250,7 @@ input UpdateProduct {
   n_stock: Float
   n_price: Float
   n_photo: String
+  d_scheduleTime: DateTime
   id: Float!
 }
 
@@ -254,25 +288,29 @@ input UpdateBrand {
 }
 
 input CreateSelling {
-  n_accountName: String!
-  n_accountNumber: String!
-  n_SellingMethod: String!
+  i_sellingAddressId: Float!
+  i_paymentId: Float!
+  n_invoice: String!
+  n_grandTotal: Float!
+  n_status: String!
 }
 
 input UpdateSelling {
-  n_accountName: String
-  n_accountNumber: String
-  n_SellingMethod: String
+  i_sellingAddressId: Float
+  i_paymentId: Float
+  n_invoice: String
+  n_grandTotal: Float
+  n_status: String
   id: Float!
 }
 
-input CreatePayment {
+input CreatePaymentMethod {
   n_accountName: String!
   n_accountNumber: String!
   n_paymentMethod: String!
 }
 
-input UpdatePayment {
+input UpdatePaymentMethod {
   n_accountName: String
   n_accountNumber: String
   n_paymentMethod: String

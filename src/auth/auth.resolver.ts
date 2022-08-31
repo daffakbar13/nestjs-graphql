@@ -1,12 +1,21 @@
 import { UseInterceptors, ClassSerializerInterceptor, UseGuards } from '@nestjs/common';
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, Int, ResolveField, Parent } from '@nestjs/graphql';
 import { User, UserModel } from 'src/auth/entities/user.entity';
-import { AuthService } from './auth.service';
+import { AuthService, RoleService } from './auth.service';
 import { LoginDto, RegisterUser, Token } from './dto/auth.dto';
+import { RoleModel } from './entities/role.entity';
 
 @Resolver(() => User)
 export class AuthResolver {
-  constructor(private readonly authService: AuthService) { }
+  constructor(
+    private readonly authService: AuthService,
+    private readonly roleService: RoleService
+  ) { }
+
+  @ResolveField(() => RoleModel)
+  protected brand(@Parent() user: User): Promise<RoleModel> {
+    return this.roleService.findAll({ i_id: user.i_id })
+  }
 
   @Mutation(() => UserModel)
   protected async registerUser(

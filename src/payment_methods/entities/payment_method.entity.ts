@@ -8,7 +8,7 @@ import { Selling } from 'src/sellings/entities/selling.entity';
   paranoid: true
 })
 @ObjectType()
-export class Payment extends Model {
+export class PaymentMethod extends Model {
   @PrimaryKey
   @AutoIncrement
   @Column({})
@@ -63,15 +63,15 @@ export class Payment extends Model {
   @BelongsTo(() => User, 'i_deletedByUserId')
   static readonly deletedByUser: User;
 
-  @HasMany(() => Selling, 'i_paymentId')
-  readonly selling: Selling
+  @HasMany(() => Selling)
+  readonly sellings: Selling[]
 }
 
 @ObjectType()
-export class PaymentModel {
+export class PaymentMethodModel {
   @Field()
   readonly count: number
 
-  @Field((type) => [Payment], { nullable: 'itemsAndList' })
-  readonly rows: Payment[]
+  @Field(() => [PaymentMethod], { nullable: 'itemsAndList' })
+  readonly rows: PaymentMethod[]
 }

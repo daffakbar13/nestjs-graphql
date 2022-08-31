@@ -1,26 +1,28 @@
 import { InputType, Field, PartialType, ArgsType } from '@nestjs/graphql';
 import { IsDate, IsInt, IsString } from 'class-validator';
 import { Options } from 'src/utils/options';
+import { SellingStatus } from '../entities/selling.entity';
 
 @InputType()
 export class CreateSelling {
     static readonly KEY = 'createSelling'
 
-    public readonly i_createdByUserId: number;
-
-    public readonly i_updatedByUserId: number;
+    public readonly i_usersId: number;
 
     @Field()
-    @IsString()
-    public readonly n_accountName: string;
+    readonly i_sellingAddressId: number;
 
     @Field()
-    @IsString()
-    public readonly n_accountNumber: string;
+    readonly i_paymentId: number;
 
     @Field()
-    @IsString()
-    public readonly n_SellingMethod: string;
+    readonly n_invoice: string;
+
+    @Field()
+    readonly n_grandTotal: number;
+
+    @Field()
+    readonly n_status: string;
 }
 
 @InputType()

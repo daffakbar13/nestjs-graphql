@@ -3,8 +3,8 @@ import { Table, Column, Model, DataType, HasMany, ForeignKey, BelongsTo, AutoInc
 import { Brand } from 'src/brands/entities/brand.entity';
 import { Product } from 'src/products/entities/product.entity';
 import { Role } from 'src/auth/entities/role.entity';
-import { Payment } from 'src/payments/entities/payment.entity';
 import { Selling } from 'src/sellings/entities/selling.entity';
+import { PaymentMethod } from 'src/payment_methods/entities/payment_method.entity';
 
 @Table({
   tableName: 'users',
@@ -75,14 +75,14 @@ export class User extends Model {
   @HasMany(() => Brand, 'i_deletedByUserId')
   readonly brandDeleted: Brand[]
 
-  @HasMany(() => Payment, 'i_createdByUserId')
-  readonly paymentCreated: Payment[]
+  @HasMany(() => PaymentMethod, 'i_createdByUserId')
+  readonly paymentCreated: PaymentMethod[]
 
-  @HasMany(() => Payment, 'i_updatedByUserId')
-  readonly paymentUpdated: Payment[]
+  @HasMany(() => PaymentMethod, 'i_updatedByUserId')
+  readonly paymentUpdated: PaymentMethod[]
 
-  @HasMany(() => Payment, 'i_deletedByUserId')
-  readonly paymentDeleted: Payment[]
+  @HasMany(() => PaymentMethod, 'i_deletedByUserId')
+  readonly paymentDeleted: PaymentMethod[]
 
   @HasMany(() => Selling)
   readonly selling: Selling[]

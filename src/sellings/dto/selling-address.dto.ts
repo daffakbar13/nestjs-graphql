@@ -6,21 +6,14 @@ import { Options } from 'src/utils/options';
 export class CreateSellingAddress {
     static readonly KEY = 'createSellingAddress'
 
-    public readonly i_createdByUserId: number;
-
-    public readonly i_updatedByUserId: number;
+    @Field()
+    readonly n_name: string;
 
     @Field()
-    @IsString()
-    public readonly n_accountName: string;
+    readonly n_phone: string;
 
     @Field()
-    @IsString()
-    public readonly n_accountNumber: string;
-
-    @Field()
-    @IsString()
-    public readonly n_SellingAddressMethod: string;
+    readonly n_address: string;
 }
 
 @InputType()

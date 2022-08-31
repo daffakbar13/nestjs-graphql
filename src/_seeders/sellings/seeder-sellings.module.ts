@@ -1,15 +1,15 @@
 import { Module } from "@nestjs/common";
 import { SequelizeModule } from "@nestjs/sequelize";
 import { SeederModule } from "nestjs-sequelize-seeder";
-import { Role } from "src/auth/entities/role.entity";
-import { SeedUser } from "./user.seeder";
+import { Selling } from "src/sellings/entities/selling.entity";
+import { SeedSelling } from "./selling.seeder";
 
 @Module({
     imports: [
-        SequelizeModule.forFeature([Role]),
+        SequelizeModule.forFeature([Selling]),
         SeederModule.forFeature([
-            SeedUser,
+            SeedSelling
         ])
     ]
 })
-export class SeedUsersModule { }
+export class SeedSellingsModule { }

@@ -1,11 +1,11 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { AutoIncrement, BelongsTo, Column, CreatedAt, DataType, DeletedAt, ForeignKey, HasMany, Model, PrimaryKey, Table, UpdatedAt } from 'sequelize-typescript';
 import { User } from 'src/auth/entities/user.entity';
-import { Payment } from 'src/payments/entities/payment.entity';
+import { PaymentMethod } from 'src/payment_methods/entities/payment_method.entity';
 import { SellingAddress } from './selling-address.entity';
 import { SellingProduct } from './selling-product.entity';
 
-enum SellingStatus {
+export enum SellingStatus {
   Pending = 'Pending',
   Proccess = 'Proccess',
   Delivered = 'Delivered',
@@ -33,7 +33,7 @@ export class Selling extends Model {
   @Field()
   readonly i_sellingAddressId: number;
 
-  @ForeignKey(() => Payment)
+  @ForeignKey(() => PaymentMethod)
   @Column({})
   @Field()
   readonly i_paymentId: number;
@@ -60,8 +60,8 @@ export class Selling extends Model {
   @BelongsTo(() => SellingAddress)
   static readonly address: SellingAddress;
 
-  @BelongsTo(() => Payment, 'i_paymentId')
-  static readonly payment: Payment;
+  @BelongsTo(() => PaymentMethod, 'i_paymentId')
+  static readonly payment: PaymentMethod;
 
   @HasMany(() => SellingProduct)
   readonly product: SellingProduct

@@ -21,6 +21,8 @@ export class ProductService {
   }
 
   public async findAll(filter?: FilterProduct, options?: Options): Promise<{ count: number; rows: Product[] }> {
+    console.log(options);
+
     return this.repository.findAll(
       OptionsAuthorize(filter),
       OptionsAuthorize(options)

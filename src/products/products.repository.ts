@@ -30,6 +30,7 @@ export class ProductRepository {
             n_price,
             n_product,
             n_stock,
+            d_scheduleTime: null
         }
         const newProduct = await this.product.create(data as any);
 
@@ -56,6 +57,7 @@ export class ProductRepository {
             n_price,
             n_product,
             n_stock,
+            d_scheduleTime: null
         }
         await this.validate({ i_id: input.id })
         await this.product.update(data, { where: { i_id: id } });

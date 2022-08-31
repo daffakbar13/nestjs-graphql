@@ -6,21 +6,26 @@ import { Options } from 'src/utils/options';
 export class CreateSellingProduct {
     static readonly KEY = 'createSellingProduct'
 
-    public readonly i_createdByUserId: number;
-
-    public readonly i_updatedByUserId: number;
+    @Field()
+    readonly i_sellingId: number;
 
     @Field()
-    @IsString()
-    public readonly n_accountName: string;
+    readonly n_product: string;
 
     @Field()
-    @IsString()
-    public readonly n_accountNumber: string;
+    readonly n_brand: string;
 
     @Field()
-    @IsString()
-    public readonly n_SellingProductMethod: string;
+    readonly n_quantity: number;
+
+    @Field()
+    readonly n_price: number;
+
+    @Field()
+    readonly total: number;
+
+    @Field()
+    readonly n_photo: string;
 }
 
 @InputType()

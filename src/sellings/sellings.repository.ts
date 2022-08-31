@@ -18,13 +18,14 @@ export class SellingRepository {
     }
 
     public async create(input: CreateSelling, user: User): Promise<{ count: number; rows: Selling[] }> {
-        const { n_accountName, n_accountNumber, n_SellingMethod } = input
+        const { i_paymentId, i_sellingAddressId, n_grandTotal, n_invoice, n_status } = input
         const data: CreateSelling = {
-            i_createdByUserId: user.i_id,
-            i_updatedByUserId: user.i_id,
-            n_accountName,
-            n_accountNumber,
-            n_SellingMethod
+            i_usersId: user.i_id,
+            i_paymentId,
+            i_sellingAddressId,
+            n_grandTotal,
+            n_invoice,
+            n_status
         }
         await this.selling.create(data as any);
 
@@ -41,12 +42,14 @@ export class SellingRepository {
     }
 
     public async update(input: UpdateSelling, user: User): Promise<{ count: number; rows: Selling[] }> {
-        const { id, n_accountName, n_accountNumber, n_SellingMethod } = input
+        const { id, i_paymentId, i_sellingAddressId, n_grandTotal, n_invoice, n_status } = input
         const data: UpdateSelling = {
-            i_updatedByUserId: user.i_id,
-            n_accountName,
-            n_accountNumber,
-            n_SellingMethod,
+            i_usersId: user.i_id,
+            i_paymentId,
+            i_sellingAddressId,
+            n_grandTotal,
+            n_invoice,
+            n_status
         }
 
         await this.verifySelling({ i_id: input.id })
