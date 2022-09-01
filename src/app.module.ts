@@ -49,13 +49,13 @@ config({ path: resolve(__dirname, '../.env') })
         SellingProduct
       ],
       autoLoadModels: true,
-      // sync: { alter: { drop: true }, force: true },
+      sync: { alter: { drop: true }, force: true },
       synchronize: true,
     }),
     SeederModule.forRoot({
       isGlobal: true,
-      // runOnlyIfTableIsEmpty: true,
-      disabled: true
+      runOnlyIfTableIsEmpty: true,
+      // disabled: true
     }),
     SeedersModule,
     ProductsModule,

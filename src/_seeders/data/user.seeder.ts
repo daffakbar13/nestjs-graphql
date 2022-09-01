@@ -12,6 +12,13 @@ export class SeedUser implements OnSeederInit {
     run() {
         const data: CreateUserInput[] = [
             {
+                i_rolesId: 3,
+                n_name: 'superadmin',
+                n_email: 'superadmin@gmail.com',
+                n_password: this.encodePassword('success100%'),
+                c_active: true,
+            },
+            {
                 i_rolesId: 1,
                 n_name: 'customer',
                 n_email: 'customer@gmail.com',
@@ -22,13 +29,6 @@ export class SeedUser implements OnSeederInit {
                 i_rolesId: 2,
                 n_name: 'admin',
                 n_email: 'admin@gmail.com',
-                n_password: this.encodePassword('success100%'),
-                c_active: true,
-            },
-            {
-                i_rolesId: 3,
-                n_name: 'superadmin',
-                n_email: 'superadmin@gmail.com',
                 n_password: this.encodePassword('success100%'),
                 c_active: true,
             }

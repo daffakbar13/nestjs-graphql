@@ -7,6 +7,7 @@ import { ProductRepository, ProductStatusRepository } from './products.repositor
 import { Options } from 'src/utils/options';
 import { OptionsAuthorize } from 'src/utils/options-authorize';
 import { AuthService } from 'src/auth/auth.service';
+import { WhereOptions } from 'sequelize';
 
 @Injectable()
 export class ProductService {
@@ -21,12 +22,7 @@ export class ProductService {
   }
 
   public async findAll(filter?: FilterProduct, options?: Options): Promise<{ count: number; rows: Product[] }> {
-    console.log(options);
-
-    return this.repository.findAll(
-      OptionsAuthorize(filter),
-      OptionsAuthorize(options)
-    )
+    return this.repository.findAll(filter as WhereOptions, options)
   }
 
   public async update(input: UpdateProduct, token: string): Promise<{ count: number; rows: Product[] }> {

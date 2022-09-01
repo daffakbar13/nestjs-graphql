@@ -153,8 +153,12 @@ type Query {
 input Options {
   limit: Float
   offset: Float
-  tes: [FilterProduct]
-  order: [[String]]
+  orderBy: OrderBy
+}
+
+input OrderBy {
+  ascending: [String]
+  descending: [String]
 }
 
 input FilterProduct {

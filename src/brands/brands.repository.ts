@@ -2,7 +2,7 @@ import { InjectModel } from "@nestjs/sequelize";
 import { WhereOptions } from "sequelize";
 import { User } from "src/auth/entities/user.entity";
 import { CheckAvailibility } from "src/utils/notfound-exception";
-import { Options } from "src/utils/options";
+import { Options, QueryOptions } from "src/utils/options";
 import { OptionsAuthorize } from "src/utils/options-authorize";
 import { CreateBrand, UpdateBrand } from "./dto/brand.dto";
 import { Brand } from "./entities/brand.entity";
@@ -32,12 +32,7 @@ export class BrandRepository {
     }
 
     public findAll(filter: WhereOptions, options?: Options): Promise<{ count: number; rows: Brand[] }> {
-        const { offset, limit } = OptionsAuthorize(options)
-        return this.brand.findAndCountAll({
-            where: filter,
-            offset,
-            limit
-        });
+        return this.brand.findAndCountAll(QueryOptions(filter, options));
     }
 
     public async update(input: UpdateBrand, user: User): Promise<{ count: number; rows: Brand[] }> {
