@@ -1,7 +1,7 @@
 import { OnSeederInit, Seeder } from "nestjs-sequelize-seeder";
 import { User } from "src/auth/entities/user.entity";
 import * as bcrypt from 'bcryptjs';
-import { CreateUserInput } from "src/auth/dto/user.dto";
+import { CreateUser } from "src/auth/dto/user.dto";
 
 @Seeder({ model: User, containsForeignKeys: true, foreignDelay: 2000 })
 export class SeedUser implements OnSeederInit {
@@ -10,7 +10,7 @@ export class SeedUser implements OnSeederInit {
         return bcrypt.hashSync(password, salt);
     }
     run() {
-        const data: CreateUserInput[] = [
+        const data: CreateUser[] = [
             {
                 i_rolesId: 3,
                 n_name: 'superadmin',

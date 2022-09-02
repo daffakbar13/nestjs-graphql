@@ -1,72 +1,66 @@
-import { InputType, Field, PartialType } from '@nestjs/graphql';
-import Permissions from 'src/auth/permissions/index.permissions';
+import { InputType, Field, PartialType, ArgsType } from '@nestjs/graphql';
+import { Options } from 'prettier';
 
 @InputType()
-export class CreateUserInput {
-    static readonly KEY = 'createProductInput'
+export class CreateUser {
+    static readonly KEY = 'createUser'
 
     @Field()
-    i_rolesId: number;
+    public readonly i_rolesId: number;
 
     @Field()
-    n_name: string;
+    public readonly n_name: string;
 
     @Field()
-    n_email: string;
+    public readonly n_email: string;
 
     @Field()
-    n_password: string;
+    public readonly n_password: string;
 
     @Field()
-    c_active: boolean;
+    public readonly c_active: boolean;
 }
 
 @InputType()
-export class UpdateUserInput extends PartialType(CreateUserInput) {
-    static readonly KEY = 'updateUserInput'
+export class UpdateUser extends PartialType(CreateUser) {
+    static readonly KEY = 'updateUser'
     @Field()
-    id?: number;
+    public readonly id?: number;
 
     @Field({ nullable: true })
-    d_lastLoginAt?: Date;
+    public readonly d_lastLoginAt?: Date;
 }
-
-@InputType()
-export class LimitUser {
-    static readonly KEY = 'limitUserInput'
-
-    @Field({ nullable: true })
-    limit?: number
-
-    @Field({ nullable: true })
-    offset?: number
-}
-
 @InputType()
 export class FilterUser {
     static readonly KEY = 'findUserInput'
 
     @Field({ nullable: true })
-    i_id?: number;
-
-    @Field()
-    i_roles_id?: number;
-
-    @Field()
-    n_name?: string;
-
-    @Field()
-    n_email?: string;
-
-    @Field()
-    c_active?: boolean;
+    public readonly i_id?: number;
 
     @Field({ nullable: true })
-    d_createdAt?: Date;
+    public readonly i_roles_id?: number;
 
     @Field({ nullable: true })
-    d_updatedAt?: Date;
+    public readonly n_name?: string;
 
     @Field({ nullable: true })
-    d_deletedAt?: Date;
+    public readonly n_email?: string;
+
+    @Field({ nullable: true })
+    public readonly c_active?: boolean;
+
+    @Field({ nullable: true })
+    public readonly d_createdAt?: Date;
+
+    @Field({ nullable: true })
+    public readonly d_updatedAt?: Date;
+}
+
+@ArgsType()
+export class ArgsUser {
+    @Field({ nullable: true })
+    public readonly options: Options
+
+    @Field({ nullable: true })
+    public readonly filter: FilterUser
 }

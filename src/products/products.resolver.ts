@@ -9,6 +9,8 @@ import { ArgsProductStatus, CreateProductStatus, UpdateProductStatus } from './d
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { CurrentUser } from 'src/utils/current-user';
+import { UserModel } from 'src/auth/entities/user.entity';
+import { UserService } from 'src/auth/auth.service';
 
 @UseGuards(JwtAuthGuard)
 @Resolver(() => Product)
@@ -17,7 +19,13 @@ export class ProductResolver {
     private readonly productService: ProductService,
     private readonly brandService: BrandService,
     private readonly productStatusService: ProductStatusService,
+    private readonly userService: UserService
   ) { }
+
+  @Query(() => ProductModel, { name: 'product' })
+  protected async findAll(@Args() args: ArgsProduct): Promise<ProductModel> {
+    return this.productService.findAll(args.filter, args.options);
+  }
 
   @Mutation(() => ProductModel)
   protected async createProduct(
@@ -25,21 +33,6 @@ export class ProductResolver {
     @CurrentUser() token: string
   ): Promise<ProductModel> {
     return await this.productService.create(input, token)
-  }
-
-  @Query(() => ProductModel, { name: 'product' })
-  protected async findAll(@Args() args: ArgsProduct): Promise<ProductModel> {
-    return this.productService.findAll(args.filter, args.options);
-  }
-
-  @ResolveField(() => BrandModel)
-  protected brand(@Parent() product: Product): Promise<BrandModel> {
-    return this.brandService.findAll({ i_id: product.i_brandId })
-  }
-
-  @ResolveField(() => ProductStatusModel)
-  protected status(@Parent() product: Product): Promise<ProductStatusModel> {
-    return this.productStatusService.findAll({ i_id: product.i_productStatusId })
   }
 
   @Mutation(() => ProductModel)
@@ -56,6 +49,31 @@ export class ProductResolver {
     @CurrentUser() token: string
   ): Promise<ProductModel> {
     return await this.productService.remove({ i_id: id }, token);
+  }
+
+  @ResolveField(() => BrandModel)
+  protected brand(@Parent() product: Product): Promise<BrandModel> {
+    return this.brandService.findAll({ i_id: product.i_brandId })
+  }
+
+  @ResolveField(() => ProductStatusModel)
+  protected status(@Parent() product: Product): Promise<ProductStatusModel> {
+    return this.productStatusService.findAll({ i_id: product.i_productStatusId })
+  }
+
+  @ResolveField(() => UserModel)
+  protected createadBy(@Parent() product: Product): Promise<UserModel> {
+    return this.userService.findAll({ i_id: product.i_createdByUserId })
+  }
+
+  @ResolveField(() => UserModel)
+  protected updatedBy(@Parent() product: Product): Promise<UserModel> {
+    return this.userService.findAll({ i_id: product.i_updatedByUserId })
+  }
+
+  @ResolveField(() => UserModel)
+  protected deletedBy(@Parent() product: Product): Promise<UserModel> {
+    return this.userService.findAll({ i_id: product.i_deletedByUserId })
   }
 }
 @UseGuards(JwtAuthGuard)

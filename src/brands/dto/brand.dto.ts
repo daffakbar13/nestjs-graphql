@@ -29,6 +29,8 @@ export class UpdateBrand extends PartialType(CreateBrand) {
     @Field()
     @IsInt()
     public readonly id?: number;
+
+    public readonly i_deletedByUserId?: number;
 }
 
 @InputType()
@@ -36,6 +38,18 @@ export class FilterBrand {
     @Field({ nullable: true })
     @IsInt()
     public readonly i_id?: number;
+
+    @Field({ nullable: true })
+    @IsInt()
+    public readonly i_createdByUserId?: number;
+
+    @Field({ nullable: true })
+    @IsInt()
+    public readonly i_updatedByUserId?: number;
+
+    @Field({ nullable: true })
+    @IsInt()
+    public readonly i_deletedByUserId?: number;
 
     @Field({ nullable: true })
     @IsString()
@@ -56,10 +70,6 @@ export class FilterBrand {
     @Field({ nullable: true })
     @IsDate()
     public readonly d_updatedAt?: Date;
-
-    @Field({ nullable: true })
-    @IsDate()
-    public readonly d_deletedAt?: Date;
 }
 
 @ArgsType()

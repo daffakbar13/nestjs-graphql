@@ -1,6 +1,7 @@
 import { InputType, Field, PartialType, ArgsType, OmitType, PickType } from '@nestjs/graphql';
 import { IsArray, IsDate, IsInt, IsString, MaxLength } from 'class-validator';
 import { Options } from 'src/utils/options';
+import Permissions from '../permissions/index.permissions';
 
 @InputType()
 export class CreateRole {
@@ -8,11 +9,11 @@ export class CreateRole {
 
     @Field({ nullable: true })
     @IsString()
-    readonly n_role?: string
+    public readonly n_role?: string
 
-    @Field({ nullable: true })
+    @Field(() => [String], { nullable: 'itemsAndList' })
     @IsArray()
-    readonly permissions?: string[]
+    public readonly permissions?: string[]
 }
 
 @InputType()
@@ -33,7 +34,7 @@ export class FilterRole {
     @IsString()
     readonly n_role?: string
 
-    @Field({ nullable: true })
+    @Field(() => [String], { nullable: true })
     @IsArray()
     readonly permissions?: string[]
 

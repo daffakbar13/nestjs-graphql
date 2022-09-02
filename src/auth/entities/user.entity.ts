@@ -16,83 +16,83 @@ export class User extends Model {
   @AutoIncrement
   @Column({})
   @Field({ nullable: true })
-  readonly i_id: number;
+  public readonly i_id: number;
 
   @ForeignKey(() => Role)
   @Column({})
   @Field()
-  readonly i_rolesId: number;
+  public readonly i_rolesId: number;
 
   @BelongsTo(() => Role)
-  readonly role: Role;
+  public readonly role: Role;
 
   @Column({ type: DataType.TEXT })
   @Field()
-  readonly n_name: string;
+  public readonly n_name: string;
 
   @Column({ type: DataType.TEXT })
   @Field()
-  readonly n_email: string;
+  public readonly n_email: string;
 
   @Column({ type: DataType.TEXT })
-  readonly n_password: string;
+  public readonly n_password: string;
 
   @Column({ type: DataType.BOOLEAN })
   @Field()
-  readonly c_active: boolean;
+  public readonly c_active: boolean;
 
   @CreatedAt
   @Field({ nullable: true })
-  readonly d_createdAt: Date;
+  public readonly d_createdAt: Date;
 
   @UpdatedAt
   @Field({ nullable: true })
-  readonly d_updatedAt: Date;
+  public readonly d_updatedAt: Date;
 
   @Column({})
   @Field({ nullable: true })
-  readonly d_lastLoginAt: Date;
+  public readonly d_lastLoginAt: Date;
 
   @DeletedAt
   @Field({ nullable: true })
-  readonly d_deletedAt: Date;
+  public readonly d_deletedAt: Date;
 
   @HasMany(() => Product, 'i_createdByUserId')
-  readonly productCreated: Product[]
+  public readonly productCreated: Product[]
 
   @HasMany(() => Product, 'i_updatedByUserId')
-  readonly productUpdated: Product[]
+  public readonly productUpdated: Product[]
 
   @HasMany(() => Product, 'i_deletedByUserId')
-  readonly productDeleted: Product[]
+  public readonly productDeleted: Product[]
 
   @HasMany(() => Brand, 'i_createdByUserId')
-  readonly brandCreated: Brand[]
+  public readonly brandCreated: Brand[]
 
   @HasMany(() => Brand, 'i_updatedByUserId')
-  readonly brandUpdated: Brand[]
+  public readonly brandUpdated: Brand[]
 
   @HasMany(() => Brand, 'i_deletedByUserId')
-  readonly brandDeleted: Brand[]
+  public readonly brandDeleted: Brand[]
 
   @HasMany(() => PaymentMethod, 'i_createdByUserId')
-  readonly paymentCreated: PaymentMethod[]
+  public readonly paymentCreated: PaymentMethod[]
 
   @HasMany(() => PaymentMethod, 'i_updatedByUserId')
-  readonly paymentUpdated: PaymentMethod[]
+  public readonly paymentUpdated: PaymentMethod[]
 
   @HasMany(() => PaymentMethod, 'i_deletedByUserId')
-  readonly paymentDeleted: PaymentMethod[]
+  public readonly paymentDeleted: PaymentMethod[]
 
   @HasMany(() => Selling)
-  readonly selling: Selling[]
+  public readonly selling: Selling[]
 }
 
 @ObjectType()
 export class UserModel {
   @Field({ nullable: true })
-  readonly count: number
+  public readonly count: number
 
   @Field(() => [User], { nullable: 'itemsAndList' })
-  readonly rows: User[]
+  public readonly rows: User[]
 }

@@ -1,7 +1,5 @@
 import { InputType, Field } from "@nestjs/graphql"
 import { WhereOptions } from "sequelize"
-import { FilterProduct } from "src/products/dto/product.dto"
-import { Product } from "src/products/entities/product.entity"
 
 @InputType()
 export class OrderBy {
@@ -45,7 +43,7 @@ export const OptionsOrder = (options: OrderBy) => {
     return orderBy
 }
 
-export const QueryOptions = (filter: WhereOptions, options: Options): object => {
+export const QueryOptions = (filter: WhereOptions, options?: Options): object => {
     return {
         where: filter,
         limit: options?.limit,

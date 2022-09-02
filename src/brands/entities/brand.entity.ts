@@ -51,7 +51,6 @@ export class Brand extends Model {
   readonly d_updatedAt: Date;
 
   @DeletedAt
-  @Field({ nullable: true })
   readonly d_deletedAt: Date;
 
   @BelongsTo(() => User, 'i_createdByUserId')

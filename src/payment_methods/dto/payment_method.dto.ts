@@ -29,6 +29,8 @@ export class UpdatePaymentMethod extends PartialType(CreatePaymentMethod) {
     @Field()
     @IsInt()
     public readonly id?: number;
+
+    public readonly i_deletedByUserId?: number;
 }
 
 @InputType()

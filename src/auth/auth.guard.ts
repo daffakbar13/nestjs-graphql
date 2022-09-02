@@ -37,13 +37,6 @@ export const PermissionGuard = (permission: Permissions): Type<CanActivate> => {
             const user = await this.authService.getUserByToken(token as unknown as string)
             const role = await this.authService.getRoleByUser({ i_id: user.i_rolesId })
 
-            console.log(role?.permissions, 1);
-
-            console.log(permission, 2);
-
-            console.log(role?.permissions.includes(permission));
-
-
             return role?.permissions.includes(permission);
         }
     }

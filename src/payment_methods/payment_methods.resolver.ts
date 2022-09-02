@@ -5,12 +5,17 @@ import { CurrentUser } from 'src/utils/current-user';
 import { PaymentMethodService } from './payment_methods.service';
 import { ArgsPaymentMethod, CreatePaymentMethod, UpdatePaymentMethod } from './dto/payment_method.dto';
 import { PaymentMethod, PaymentMethodModel } from './entities/payment_method.entity';
+import { UserService } from 'src/auth/auth.service';
+import { UserModel } from 'src/auth/entities/user.entity';
+import { SellingModel } from 'src/sellings/entities/selling.entity';
+import { SellingService } from 'src/sellings/sellings.service';
 
 @UseGuards(JwtAuthGuard)
 @Resolver(() => PaymentMethod)
 export class PaymentMethodResolver {
   constructor(
     private readonly paymentMethodService: PaymentMethodService,
+    private readonly userService: UserService
   ) { }
   @Mutation(() => PaymentMethodModel)
   protected async createPaymentMethod(
@@ -24,11 +29,6 @@ export class PaymentMethodResolver {
   protected findAll(@Args() args: ArgsPaymentMethod): Promise<PaymentMethodModel> {
     return this.paymentMethodService.findAll(args.filter, args.options);
   }
-
-  // @ResolveField(() => ProductModel)
-  // protected products(@Parent() PaymentMethod: PaymentMethod): Promise<ProductModel> {
-  //   return this.productService.findAll({ i_PaymentMethodId: PaymentMethod.i_id })
-  // }
 
   @Mutation(() => PaymentMethodModel)
   protected updatePaymentMethod(
@@ -44,5 +44,20 @@ export class PaymentMethodResolver {
     @CurrentUser() token: string
   ): Promise<PaymentMethodModel> {
     return await this.paymentMethodService.remove({ i_id: id }, token);
+  }
+
+  @ResolveField(() => UserModel)
+  protected createadBy(@Parent() payment: PaymentMethod): Promise<UserModel> {
+    return this.userService.findAll({ i_id: payment.i_createdByUserId })
+  }
+
+  @ResolveField(() => UserModel)
+  protected updatedBy(@Parent() payment: PaymentMethod): Promise<UserModel> {
+    return this.userService.findAll({ i_id: payment.i_updatedByUserId })
+  }
+
+  @ResolveField(() => UserModel)
+  protected deletedBy(@Parent() payment: PaymentMethod): Promise<UserModel> {
+    return this.userService.findAll({ i_id: payment.i_deletedByUserId })
   }
 }

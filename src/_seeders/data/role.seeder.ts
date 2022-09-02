@@ -3,6 +3,7 @@ import AdminPermissions from "src/auth/permissions/admin.permissions";
 import SuperAdminPermissions from "src/auth/permissions/super-admin.permissions";
 import CustomerPermissions from "src/auth/permissions/customer.permissions";
 import { Role } from "src/auth/entities/role.entity";
+import { CreateRole } from "src/auth/dto/role.dto";
 
 @Seeder({ model: Role })
 export class SeedRoleCustomer implements OnSeederInit {
@@ -14,7 +15,7 @@ export class SeedRoleCustomer implements OnSeederInit {
             permissions.push(key)
         }
 
-        const data = [
+        const data: CreateRole[] = [
             {
                 n_role: 'Customer',
                 permissions: permissions

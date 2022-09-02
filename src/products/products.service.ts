@@ -5,7 +5,6 @@ import { Product } from './entities/product.entity';
 import { ProductStatus } from './entities/product-status.entity';
 import { ProductRepository, ProductStatusRepository } from './products.repository';
 import { Options } from 'src/utils/options';
-import { OptionsAuthorize } from 'src/utils/options-authorize';
 import { AuthService } from 'src/auth/auth.service';
 import { WhereOptions } from 'sequelize';
 
@@ -32,7 +31,7 @@ export class ProductService {
 
   public async remove(filter: FilterProduct, token: string): Promise<{ count: number; rows: Product[] }> {
     const user = await this.authService.getUserByToken(token)
-    return await this.repository.remove(OptionsAuthorize(filter), user);
+    return await this.repository.remove(filter as WhereOptions, user);
   }
 }
 
@@ -47,10 +46,7 @@ export class ProductStatusService {
   }
 
   public async findAll(filter: FilterProductStatus, options?: Options): Promise<{ count: number; rows: ProductStatus[] }> {
-    return this.repository.findAll(
-      OptionsAuthorize(filter),
-      OptionsAuthorize(options)
-    )
+    return this.repository.findAll(filter as WhereOptions, options)
   }
 
   public async update(input: UpdateProductStatus): Promise<{ count: number; rows: ProductStatus[] }> {
@@ -58,6 +54,6 @@ export class ProductStatusService {
   }
 
   public async remove(filter: FilterProductStatus): Promise<{ count: number; rows: ProductStatus[] }> {
-    return await this.repository.remove(OptionsAuthorize(filter));
+    return await this.repository.remove(filter as WhereOptions);
   }
 }

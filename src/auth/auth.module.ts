@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 import { AuthService, RoleService, UserService } from './auth.service';
 import { JwtStrategy } from './auth.strategy';
@@ -9,6 +9,8 @@ import { AuthResolver } from './auth.resolver';
 import { config } from 'dotenv';
 import { resolve } from 'path';
 import { Role } from 'src/auth/entities/role.entity';
+import { BrandsModule } from 'src/brands/brands.module';
+import { RoleRepository, UserRepository } from './auth.repository';
 
 config({ path: resolve(__dirname, '../../.env') })
 @Module({
@@ -21,8 +23,17 @@ config({ path: resolve(__dirname, '../../.env') })
       }),
     }),
     SequelizeModule.forFeature([User, Role]),
+    forwardRef(() => BrandsModule)
   ],
-  providers: [AuthService, UserService, RoleService, AuthResolver, JwtStrategy],
-  exports: [AuthService]
+  providers: [
+    AuthService,
+    UserService,
+    RoleService,
+    AuthResolver,
+    JwtStrategy,
+    UserRepository,
+    RoleRepository
+  ],
+  exports: [AuthService, UserService, RoleService]
 })
 export class AuthModule { }

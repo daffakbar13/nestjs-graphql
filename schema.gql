@@ -30,6 +30,9 @@ type PaymentMethod {
   d_createdAt: DateTime!
   d_updatedAt: DateTime!
   d_deletedAt: DateTime
+  createadBy: UserModel!
+  updatedBy: UserModel!
+  deletedBy: UserModel!
 }
 
 type PaymentMethodModel {
@@ -74,7 +77,10 @@ type User {
   d_updatedAt: DateTime
   d_lastLoginAt: DateTime
   d_deletedAt: DateTime
-  brand: RoleModel!
+  role: RoleModel!
+  brandCreated: BrandModel!
+  brandUpdated: BrandModel!
+  brandDeleted: BrandModel!
 }
 
 type UserModel {
@@ -92,8 +98,10 @@ type Brand {
   c_active: Boolean!
   d_createdAt: DateTime!
   d_updatedAt: DateTime!
-  d_deletedAt: DateTime
   products: ProductModel!
+  createadBy: UserModel!
+  updatedBy: UserModel!
+  deletedBy: UserModel!
 }
 
 type BrandModel {
@@ -131,6 +139,9 @@ type Product {
   d_deletedAt: DateTime
   brand: BrandModel!
   status: ProductStatusModel!
+  createadBy: UserModel!
+  updatedBy: UserModel!
+  deletedBy: UserModel!
 }
 
 type ProductModel {
@@ -184,12 +195,14 @@ input FilterProductStatus {
 
 input FilterBrand {
   i_id: Float
+  i_createdByUserId: Float
+  i_updatedByUserId: Float
+  i_deletedByUserId: Float
   n_brand: String
   n_photo: String
   c_active: String
   d_createdAt: DateTime
   d_updatedAt: DateTime
-  d_deletedAt: DateTime
 }
 
 input FilterSelling {
@@ -222,7 +235,7 @@ type Mutation {
   createProductStatus(createProductStatus: CreateProductStatus!): ProductStatusModel!
   updateProductStatus(updateProduct: UpdateProductStatus!): ProductStatusModel!
   removeProductStatus(id: Float!): ProductStatusModel!
-  registerUser(register: RegisterUser!): UserModel!
+  registerCustomer(register: RegisterUser!): UserModel!
   registerAdmin(register: RegisterUser!): UserModel!
   registerSuperAdmin(register: RegisterUser!): UserModel!
   login(login: LoginDto!): Token!
