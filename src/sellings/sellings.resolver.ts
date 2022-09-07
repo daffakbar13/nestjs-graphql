@@ -13,36 +13,20 @@ export class SellingResolver {
     private readonly sellingService: SellingService,
   ) { }
   @Mutation(() => SellingModel)
-  protected async createSelling(
+  protected createSelling(
     @Args(CreateSelling.KEY) input: CreateSelling,
     @CurrentUser() token: string
   ) {
-    return await this.sellingService.create(input, token);
+    return this.sellingService.create(input, token);
   }
 
-  @Query(() => SellingModel, { name: 'Selling' })
+  @Query(() => SellingModel, { name: 'selling' })
   protected findAll(@Args() args: ArgsSelling): Promise<SellingModel> {
     return this.sellingService.findAll(args.filter, args.options);
   }
 
-  // @ResolveField(() => ProductModel)
-  // protected products(@Parent() Selling: Selling): Promise<ProductModel> {
-  //   return this.productService.findAll({ i_SellingId: Selling.i_id })
-  // }
-
   @Mutation(() => SellingModel)
-  protected updateSelling(
-    @Args(UpdateSelling.KEY) input: UpdateSelling,
-    @CurrentUser() token: string
-  ): Promise<SellingModel> {
-    return this.sellingService.update(input, token);
-  }
-
-  @Mutation(() => SellingModel)
-  protected async removeSelling(
-    @Args('id') id: number,
-    @CurrentUser() token: string
-  ): Promise<SellingModel> {
-    return await this.sellingService.remove({ i_id: id }, token);
+  protected updateSelling(@Args(UpdateSelling.KEY) args: UpdateSelling): Promise<SellingModel> {
+    return this.sellingService.update(args.filter, args);
   }
 }

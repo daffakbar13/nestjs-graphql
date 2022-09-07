@@ -1,7 +1,7 @@
 import { Resolver, Query, Mutation, Args, ResolveField, Parent } from '@nestjs/graphql';
 import { ProductService, ProductStatusService } from './products.service';
 import { BrandService } from 'src/brands/brands.service';
-import { ArgsProduct, CreateProduct, UpdateProduct } from './dto/product.dto';
+import { ArgsProduct, CreateProduct, FilterProduct, UpdateProduct } from './dto/product.dto';
 import { Product, ProductModel } from './entities/product.entity';
 import { BrandModel } from 'src/brands/entities/brand.entity';
 import { ProductStatus, ProductStatusModel } from './entities/product-status.entity';
@@ -37,18 +37,18 @@ export class ProductResolver {
 
   @Mutation(() => ProductModel)
   protected async updateProduct(
-    @Args(UpdateProduct.KEY) input: UpdateProduct,
+    @Args(UpdateProduct.KEY) args: UpdateProduct,
     @CurrentUser() token: string
   ): Promise<ProductModel> {
-    return await this.productService.update(input, token)
+    return await this.productService.update(args.filter, args, token)
   }
 
   @Mutation(() => ProductModel)
   protected async removeProduct(
-    @Args('id') id: number,
+    @Args(FilterProduct.KEY) args: FilterProduct,
     @CurrentUser() token: string
   ): Promise<ProductModel> {
-    return await this.productService.remove({ i_id: id }, token);
+    return await this.productService.remove(args, token);
   }
 
   @ResolveField(() => BrandModel)

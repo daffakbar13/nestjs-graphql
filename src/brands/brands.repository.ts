@@ -1,8 +1,6 @@
 import { InjectModel } from "@nestjs/sequelize";
-import { WhereOptions } from "sequelize";
-import { User } from "src/auth/entities/user.entity";
 import { Options, Query } from "src/utils/options";
-import { CreateBrand, UpdateBrand } from "./dto/brand.dto";
+import { CreateBrand, FilterBrand, UpdateBrand } from "./dto/brand.dto";
 import { Brand } from "./entities/brand.entity";
 
 export class BrandRepository {
@@ -11,25 +9,19 @@ export class BrandRepository {
 
     public async create(input: CreateBrand): Promise<{ count: number; rows: Brand[] }> {
         const created = await this.brand.create({ ...input });
-
         return { count: 1, rows: [created] }
     }
 
-    public findAll(filter: WhereOptions, options?: Options): Promise<{ count: number; rows: Brand[] }> {
+    public findAll(filter: FilterBrand, options?: Options): Promise<{ count: number; rows: Brand[] }> {
         return this.brand.findAndCountAll(Query({ ...filter }, options));
     }
 
-    public async update(input: UpdateBrand, user: User): Promise<{ count: number; rows: Brand[] }> {
-        Object.assign(input, { i_updatedByUserId: user.i_id })
-        const [count, rows] = await this.brand.update(input, { where: { i_id: input.id }, returning: true });
-
+    public async update(filter: FilterBrand, input: UpdateBrand): Promise<{ count: number; rows: Brand[] }> {
+        const [count, rows] = await this.brand.update({ ...input }, { where: { ...filter }, returning: true });
         return { count, rows }
     }
 
-    public async remove(filter: WhereOptions, user: User): Promise<{ count: number; rows: Brand[] }> {
-        const [count, rows] = await this.brand.update({ i_deletedByUserId: user.i_id }, { where: filter, returning: true });
-        await this.brand.destroy({ where: filter });
-
-        return { count, rows }
+    public async remove(filter: FilterBrand): Promise<void> {
+        await this.brand.destroy({ where: { ...filter } });
     }
 }

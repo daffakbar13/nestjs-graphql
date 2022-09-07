@@ -1,10 +1,10 @@
-import { Inject, Injectable, Request } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateProduct, FilterProduct, UpdateProduct } from './dto/product.dto';
 import { CreateProductStatus, FilterProductStatus, UpdateProductStatus } from './dto/product-status.dto';
-import { Product } from './entities/product.entity';
+import { ProductModel } from './entities/product.entity';
 import { ProductStatus } from './entities/product-status.entity';
 import { ProductRepository, ProductStatusRepository } from './products.repository';
-import { Options } from 'src/utils/options';
+import { Modify, Options } from 'src/utils/options';
 import { AuthService } from 'src/auth/auth.service';
 import { WhereOptions } from 'sequelize';
 
@@ -15,23 +15,26 @@ export class ProductService {
     private readonly authService: AuthService
   ) { }
 
-  public async create(input: CreateProduct, token: string): Promise<{ count: number; rows: Product[] }> {
+  public async create(input: CreateProduct, token: string): Promise<ProductModel> {
     const user = await this.authService.getUserByToken(token)
-    return await this.repository.create(input, user);
+    return await this.repository.create({ ...input, ...Modify({ access: 'create', user }) });
   }
 
-  public async findAll(filter?: FilterProduct, options?: Options): Promise<{ count: number; rows: Product[] }> {
-    return this.repository.findAll(filter as WhereOptions, options)
+  public async findAll(filter?: FilterProduct, options?: Options): Promise<ProductModel> {
+    return this.repository.findAll(filter, options)
   }
 
-  public async update(input: UpdateProduct, token: string): Promise<{ count: number; rows: Product[] }> {
+  public async update(filter: FilterProduct, input: UpdateProduct, token: string): Promise<ProductModel> {
     const user = await this.authService.getUserByToken(token)
-    return await this.repository.update(input, user);
+    return await this.repository.update(filter, { ...input, ...Modify({ access: 'update', user }) });
   }
 
-  public async remove(filter: FilterProduct, token: string): Promise<{ count: number; rows: Product[] }> {
+  public async remove(filter: FilterProduct, token: string): Promise<ProductModel> {
     const user = await this.authService.getUserByToken(token)
-    return await this.repository.remove(filter as WhereOptions, user);
+    const deleted = await this.update(filter, { i_deletedByUserId: user.i_id }, token)
+    await this.repository.remove(filter);
+
+    return deleted
   }
 }
 

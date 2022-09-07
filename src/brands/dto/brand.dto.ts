@@ -2,81 +2,83 @@ import { InputType, Field, PartialType, ArgsType } from '@nestjs/graphql';
 import { IsBoolean, IsDate, IsInt, IsString } from 'class-validator';
 import { Options } from 'src/utils/options';
 
+
+@InputType()
+export class FilterBrand {
+    static readonly KEY = 'filterBrand'
+
+    @Field({ nullable: true })
+    @IsInt()
+    readonly i_id?: number;
+
+    @Field({ nullable: true })
+    @IsInt()
+    readonly i_createdByUserId?: number;
+
+    @Field({ nullable: true })
+    @IsInt()
+    readonly i_updatedByUserId?: number;
+
+    @Field({ nullable: true })
+    @IsInt()
+    readonly i_deletedByUserId?: number;
+
+    @Field({ nullable: true })
+    @IsString()
+    readonly n_brand?: string;
+
+    @Field({ nullable: true })
+    @IsString()
+    readonly n_photo?: string;
+
+    @Field({ nullable: true })
+    @IsBoolean()
+    readonly c_active?: string;
+
+    @Field({ nullable: true })
+    @IsDate()
+    readonly d_createdAt?: Date;
+
+    @Field({ nullable: true })
+    @IsDate()
+    readonly d_updatedAt?: Date;
+}
 @InputType()
 export class CreateBrand {
     static readonly KEY = 'createBrand'
 
-    public readonly i_createdByUserId: number;
+    readonly i_createdByUserId: number;
 
-    public readonly i_updatedByUserId: number;
-
-    @Field()
-    @IsString()
-    public readonly n_brand: string;
+    readonly i_updatedByUserId: number;
 
     @Field()
     @IsString()
-    public readonly n_photo: string;
+    readonly n_brand: string;
+
+    @Field()
+    @IsString()
+    readonly n_photo: string;
 
     @Field()
     @IsBoolean()
-    public readonly c_active: boolean;
+    readonly c_active: boolean;
 }
 
 @InputType()
 export class UpdateBrand extends PartialType(CreateBrand) {
     static readonly KEY = 'updateBrand'
+
+    readonly i_deletedByUserId?: number;
+
     @Field()
-    @IsInt()
-    public readonly id?: number;
-
-    public readonly i_deletedByUserId?: number;
-}
-
-@InputType()
-export class FilterBrand {
-    @Field({ nullable: true })
-    @IsInt()
-    public readonly i_id?: number;
-
-    @Field({ nullable: true })
-    @IsInt()
-    public readonly i_createdByUserId?: number;
-
-    @Field({ nullable: true })
-    @IsInt()
-    public readonly i_updatedByUserId?: number;
-
-    @Field({ nullable: true })
-    @IsInt()
-    public readonly i_deletedByUserId?: number;
-
-    @Field({ nullable: true })
-    @IsString()
-    public readonly n_brand?: string;
-
-    @Field({ nullable: true })
-    @IsString()
-    public readonly n_photo?: string;
-
-    @Field({ nullable: true })
-    @IsBoolean()
-    public readonly c_active?: string;
-
-    @Field({ nullable: true })
-    @IsDate()
-    public readonly d_createdAt?: Date;
-
-    @Field({ nullable: true })
-    @IsDate()
-    public readonly d_updatedAt?: Date;
+    readonly filter?: FilterBrand
 }
 
 @ArgsType()
 export class ArgsBrand {
     @Field({ nullable: true })
-    public readonly options: Options
+    readonly options: Options
 
     @Field({ nullable: true })
-    public readonly filter: FilterBrand
+    readonly filter: FilterBrand
 }

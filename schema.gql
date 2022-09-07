@@ -157,7 +157,7 @@ type Query {
   product(options: Options, filter: FilterProduct): ProductModel!
   productStatus(options: Options, filter: FilterProductStatus): ProductStatusModel!
   brands(options: Options, filter: FilterBrand): BrandModel!
-  Selling(options: Options, filter: FilterSelling): SellingModel!
+  selling(options: Options, filter: FilterSelling): SellingModel!
   PaymentMethods(options: Options, filter: FilterPaymentMethod): PaymentMethodModel!
 }
 
@@ -281,12 +281,13 @@ input FilterBrand {
 
 input FilterSelling {
   i_id: Float
-  n_accountName: String!
-  n_accountNumber: String!
-  n_SellingMethod: String!
+  i_usersId: Float
+  i_sellingAddressId: Float
+  i_paymentId: Float
+  n_invoice: String
+  n_grandTotal: String
+  n_status: String
   d_createdAt: DateTime
-  d_updatedAt: DateTime
-  d_deletedAt: DateTime
 }
 
 input FilterPaymentMethod {
@@ -305,7 +306,7 @@ input FilterPaymentMethod {
 type Mutation {
   createProduct(createProduct: CreateProduct!): ProductModel!
   updateProduct(updateProduct: UpdateProduct!): ProductModel!
-  removeProduct(id: Float!): ProductModel!
+  removeProduct(filterProduct: FilterProduct!): ProductModel!
   createProductStatus(createProductStatus: CreateProductStatus!): ProductStatusModel!
   updateProductStatus(updateProduct: UpdateProductStatus!): ProductStatusModel!
   removeProductStatus(id: Float!): ProductStatusModel!
@@ -315,10 +316,9 @@ type Mutation {
   login(login: LoginDto!): Token!
   createBrand(createBrand: CreateBrand!): BrandModel!
   updateBrand(updateBrand: UpdateBrand!): BrandModel!
-  removeBrand(id: Float!): BrandModel!
+  removeBrand(filterBrand: FilterBrand!): BrandModel!
   createSelling(createSelling: CreateSelling!): SellingModel!
   updateSelling(updateSelling: UpdateSelling!): SellingModel!
-  removeSelling(id: Float!): SellingModel!
   createPaymentMethod(createPaymentMethod: CreatePaymentMethod!): PaymentMethodModel!
   updatePaymentMethod(updatePaymentMethod: UpdatePaymentMethod!): PaymentMethodModel!
   removePaymentMethod(id: Float!): PaymentMethodModel!
@@ -342,7 +342,7 @@ input UpdateProduct {
   n_price: Float
   n_photo: String
   d_scheduleTime: DateTime
-  id: Float!
+  filter: FilterProduct!
 }
 
 input CreateProductStatus {
@@ -375,7 +375,7 @@ input UpdateBrand {
   n_brand: String
   n_photo: String
   c_active: Boolean
-  id: Float!
+  filter: FilterBrand!
 }
 
 input CreateSelling {
@@ -392,7 +392,7 @@ input UpdateSelling {
   n_invoice: String
   n_grandTotal: Float
   n_status: String
-  id: Float!
+  filter: FilterSelling!
 }
 
 input CreatePaymentMethod {

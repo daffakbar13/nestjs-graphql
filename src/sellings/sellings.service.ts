@@ -3,8 +3,7 @@ import { AuthService } from 'src/auth/auth.service';
 import { Options } from 'src/utils/options';
 import { SellingRepository } from './sellings.repository';
 import { CreateSelling, FilterSelling, UpdateSelling } from './dto/selling.dto';
-import { Selling } from './entities/selling.entity';
-import { WhereOptions } from 'sequelize';
+import { SellingModel } from './entities/selling.entity';
 
 @Injectable()
 export class SellingService {
@@ -13,24 +12,16 @@ export class SellingService {
     private readonly authService: AuthService
   ) { }
 
-  public async create(input: CreateSelling, token: string): Promise<{ count: number; rows: Selling[] }> {
+  public async create(input: CreateSelling, token: string): Promise<SellingModel> {
     const user = await this.authService.getUserByToken(token)
-    return await this.repository.create(input, user);
+    return this.repository.create({ ...input, i_usersId: user.i_id });
   }
 
-  public async findAll(filter: FilterSelling, options?: Options): Promise<{ count: number; rows: Selling[] }> {
-    return await this.repository.findAll(filter as WhereOptions, options)
+  public async findAll(filter: FilterSelling, options?: Options): Promise<SellingModel> {
+    return this.repository.findAll(filter, options)
   }
 
-  public async update(input: UpdateSelling, token: string): Promise<{ count: number; rows: Selling[] }> {
-    const user = (await this.authService.getUserByToken(token))
-
-    return await this.repository.update(input, user);
-  }
-
-  public async remove(filter: FilterSelling, token: string): Promise<{ count: number; rows: Selling[] }> {
-    const user = await this.authService.getUserByToken(token)
-
-    return await this.repository.remove(filter as WhereOptions, user);
+  public async update(filter: FilterSelling, input: UpdateSelling): Promise<SellingModel> {
+    return this.repository.update(filter, input);
   }
 }

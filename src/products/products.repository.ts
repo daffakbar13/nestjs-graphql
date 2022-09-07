@@ -1,50 +1,32 @@
 import { InjectModel } from "@nestjs/sequelize";
 import { WhereOptions } from "sequelize";
-import { CreateProduct, UpdateProduct } from "./dto/product.dto";
+import { CreateProduct, FilterProduct, UpdateProduct } from "./dto/product.dto";
 import { UpdateProductStatus } from "./dto/product-status.dto";
 import { Product } from "./entities/product.entity";
 import { ProductStatus } from "./entities/product-status.entity";
 import { CheckAvailibility } from "src/utils/notfound-exception";
-import { User } from "src/auth/entities/user.entity";
 import { Options, Query } from "src/utils/options";
-// import { Options, Query } from "src/utils/options";
 
 export class ProductRepository {
     @InjectModel(Product)
     private product: typeof Product
 
-    private async validate(filter: WhereOptions): Promise<boolean> {
-        const result = await this.product.findOne({ where: filter });
-        CheckAvailibility(result, 'Product not found!')
-        return true;
-    }
-
-    public async create(input, user: User): Promise<{ count: number; rows: Product[] }> {
-        Object.assign(input, {
-            i_createdByUserId: user.i_id,
-            i_updatedByUserId: user.i_id,
-        })
-
-        const created = await this.product.create(input);
-
+    public async create(input: CreateProduct): Promise<{ count: number; rows: Product[] }> {
+        const created = await this.product.create({ ...input });
         return { count: 1, rows: [created] }
     }
 
-    public findAll(filter?: WhereOptions, options?: Options): Promise<{ count: number; rows: Product[] }> {
-        return this.product.findAndCountAll(Query(filter, options));
+    public findAll(filter: FilterProduct, options?: Options): Promise<{ count: number; rows: Product[] }> {
+        return this.product.findAndCountAll(Query({ ...filter }, { ...options }));
     }
 
-    public async update(input: UpdateProduct, user: User): Promise<{ count: number; rows: Product[] }> {
-        Object.assign(input, { i_updatedByUserId: user.i_id })
-        const [count, rows] = await this.product.update(input, { where: { i_id: input.id }, returning: true });
+    public async update(filter: FilterProduct, input: UpdateProduct): Promise<{ count: number; rows: Product[] }> {
+        const [count, rows] = await this.product.update({ ...input }, { where: { ...filter }, returning: true });
         return { count, rows }
     }
 
-    public async remove(filter: WhereOptions, user: User): Promise<{ count: number; rows: Product[] }> {
-        const [count, rows] = await this.product.update({ i_deletedByUserId: user.i_id }, { where: filter, returning: true });
-        await this.product.destroy({ where: filter });
-
-        return { count, rows }
+    public async remove(filter: FilterProduct): Promise<void> {
+        await this.product.destroy({ where: { ...filter } });
     }
 }
 

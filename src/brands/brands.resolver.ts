@@ -8,7 +8,7 @@ import { ProductModel } from 'src/products/entities/product.entity';
 import { ProductService } from 'src/products/products.service';
 import { CurrentUser } from 'src/utils/current-user';
 import { BrandService } from './brands.service';
-import { ArgsBrand, CreateBrand, UpdateBrand } from './dto/brand.dto';
+import { ArgsBrand, CreateBrand, FilterBrand, UpdateBrand } from './dto/brand.dto';
 import { Brand, BrandModel } from './entities/brand.entity';
 
 @UseGuards(JwtAuthGuard)
@@ -19,6 +19,12 @@ export class BrandResolver {
     private readonly productService: ProductService,
     private readonly userService: UserService
   ) { }
+
+  @Query(() => BrandModel, { name: 'brands' })
+  protected findAll(@Args() args: ArgsBrand): Promise<BrandModel> {
+    return this.brandService.findAll(args.filter, args.options);
+  }
+
   @UseGuards(PermissionGuard(BrandPermission.CreateBrand))
   @Mutation(() => BrandModel)
   protected async createBrand(
@@ -28,25 +34,20 @@ export class BrandResolver {
     return await this.brandService.create(input, token);
   }
 
-  @Query(() => BrandModel, { name: 'brands' })
-  protected findAll(@Args() args: ArgsBrand): Promise<BrandModel> {
-    return this.brandService.findAll(args.filter, args.options);
-  }
-
   @Mutation(() => BrandModel)
   protected updateBrand(
-    @Args(UpdateBrand.KEY) input: UpdateBrand,
+    @Args(UpdateBrand.KEY) args: UpdateBrand,
     @CurrentUser() token: string
   ): Promise<BrandModel> {
-    return this.brandService.update(input, token);
+    return this.brandService.update(args.filter, args, token);
   }
 
   @Mutation(() => BrandModel)
   protected async removeBrand(
-    @Args('id') id: number,
+    @Args(FilterBrand.KEY) args: FilterBrand,
     @CurrentUser() token: string
   ): Promise<BrandModel> {
-    return await this.brandService.remove({ i_id: id }, token);
+    return await this.brandService.remove(args, token);
   }
 
   @ResolveField(() => ProductModel)
