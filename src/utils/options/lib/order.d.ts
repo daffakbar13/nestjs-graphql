@@ -1,7 +1,7 @@
 import { InputType, Field } from "@nestjs/graphql"
 
 @InputType()
-declare class Order {
+export class Order {
     @Field(() => [String], { nullable: true })
     readonly ascending: string[]
 

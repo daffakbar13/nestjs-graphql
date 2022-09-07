@@ -1,8 +1,8 @@
 import { AssignOperator } from "./operator-assign";
 import { Options } from "./options";
-import { AssignOrder } from "./order-assigns";
+import { AssignOrder } from "./order-assign";
 
-function Query(filter: object, options?: Options): object {
+export const Query = (filter: object, options?: Options): object => {
     return {
         where: { ...filter, ...AssignOperator(options?.operator) },
         limit: options?.limit,

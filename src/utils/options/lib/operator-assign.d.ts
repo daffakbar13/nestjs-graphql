@@ -1,7 +1,7 @@
 import { fn, literal, Op } from "sequelize"
 import { Operator } from "./operator"
 
-declare function AssignOperator(operator: Operator): object {
+export function AssignOperator(operator: Operator): object {
     const result: object = {}
 
     if (operator?.adjacent) {

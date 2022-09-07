@@ -2,7 +2,7 @@ import { Field, InputType } from "@nestjs/graphql"
 import { ValueArrayNumber, ValueArrayString, ValueBoolean, ValueFunction, ValueNumber, ValueString } from "./operator-hints"
 
 @InputType()
-declare class Operator {
+export class Operator {
     @Field({ nullable: true })
     readonly adjacent: ValueArrayNumber
 

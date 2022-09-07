@@ -1,7 +1,7 @@
 import { Field, InputType } from "@nestjs/graphql"
 
 @InputType()
-declare class ValueString {
+export class ValueString {
     @Field()
     readonly column: string
 
@@ -10,7 +10,7 @@ declare class ValueString {
 }
 
 @InputType()
-declare class ValueNumber {
+export class ValueNumber {
     @Field()
     readonly column: string
 
@@ -19,7 +19,7 @@ declare class ValueNumber {
 }
 
 @InputType()
-declare class ValueBoolean {
+export class ValueBoolean {
     @Field()
     readonly column: string
 
@@ -28,7 +28,7 @@ declare class ValueBoolean {
 }
 
 @InputType()
-declare class ValueArrayString {
+export class ValueArrayString {
     @Field()
     readonly column: string
 
@@ -37,7 +37,7 @@ declare class ValueArrayString {
 }
 
 @InputType()
-declare class ValueArrayNumber {
+export class ValueArrayNumber {
     @Field()
     readonly column: string
 
@@ -46,7 +46,7 @@ declare class ValueArrayNumber {
 }
 
 @InputType()
-declare class ValueFunction {
+export class ValueFunction {
     @Field()
     readonly column: string
 

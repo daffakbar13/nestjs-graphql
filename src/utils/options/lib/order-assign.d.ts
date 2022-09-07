@@ -1,6 +1,6 @@
 import { Order } from "./order"
 
-declare function AssignOrder(options: Order): any[] {
+export const AssignOrder = (options: Order): any[] => {
     const result = []
 
     if (options?.ascending) {

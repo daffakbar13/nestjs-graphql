@@ -9,12 +9,8 @@ export class BrandRepository {
     @InjectModel(Brand)
     private brand: typeof Brand
 
-    public async create(input, user: User): Promise<{ count: number; rows: Brand[] }> {
-        Object.assign(input, {
-            i_createdByUserId: user.i_id,
-            i_updatedByUserId: user.i_id,
-        })
-        const created = await this.brand.create(input);
+    public async create(input: CreateBrand): Promise<{ count: number; rows: Brand[] }> {
+        const created = await this.brand.create({ ...input });
 
         return { count: 1, rows: [created] }
     }

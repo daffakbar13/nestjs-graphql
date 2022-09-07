@@ -3,7 +3,7 @@ import { Operator } from "./operator"
 import { Order } from "./order"
 
 @InputType()
-declare class Options {
+export class Options {
     @Field({ nullable: true })
     readonly limit?: number
 
