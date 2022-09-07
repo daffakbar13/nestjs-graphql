@@ -1,66 +1,8 @@
-import { InputType, Field } from "@nestjs/graphql"
-import { WhereOptions } from "sequelize"
-import { OpTypes } from "sequelize/types/operators"
+import { Field, InputType } from "@nestjs/graphql"
+import { ValueArrayNumber, ValueArrayString, ValueBoolean, ValueFunction, ValueNumber, ValueString } from "./operator-hints"
 
 @InputType()
-class ValueString {
-    @Field()
-    readonly column: string
-
-    @Field()
-    readonly value: string
-}
-
-@InputType()
-class ValueNumber {
-    @Field()
-    readonly column: string
-
-    @Field()
-    readonly value: number
-}
-
-@InputType()
-class ValueBoolean {
-    @Field()
-    readonly column: string
-
-    @Field({ nullable: true })
-    readonly value: boolean
-}
-
-@InputType()
-class ValueArrayString {
-    @Field()
-    readonly column: string
-
-    @Field(() => [String])
-    readonly value: string[]
-}
-
-@InputType()
-class ValueArrayNumber {
-    @Field()
-    readonly column: string
-
-    @Field(() => [Number])
-    readonly value: number[]
-}
-
-@InputType()
-class ValueFunction {
-    @Field()
-    readonly column: string
-
-    @Field()
-    readonly function: string
-
-    @Field()
-    readonly value: number
-}
-
-@InputType()
-class Operator {
+declare class Operator {
     @Field({ nullable: true })
     readonly adjacent: ValueArrayNumber
 
@@ -177,55 +119,4 @@ class Operator {
 
     @Field({ nullable: true })
     readonly values: ValueArrayString
-}
-
-@InputType()
-export class OrderBy {
-    @Field(() => [String], { nullable: 'itemsAndList' })
-    public readonly ascending: string[]
-
-    @Field(() => [String], { nullable: 'itemsAndList' })
-    public readonly descending: string[]
-}
-@InputType()
-export class Options {
-    @Field({ nullable: true })
-    public readonly limit?: number
-
-    @Field({ nullable: true })
-    public readonly offset?: number
-
-    @Field({ nullable: true })
-    public readonly orderBy?: OrderBy
-}
-
-export const OptionsOrder = (options: OrderBy) => {
-    const orderBy = []
-
-    if (options !== undefined) {
-        const ascending = options.ascending
-        const descending = options.descending
-
-        if (ascending !== undefined) {
-            ascending.forEach(element => {
-                orderBy.push([element, 'ASC'])
-            })
-        }
-        if (descending != undefined) {
-            descending.forEach(element => {
-                orderBy.push([element, 'DESC'])
-            })
-        }
-    }
-
-    return orderBy
-}
-
-export const QueryOptions = (filter: WhereOptions, options?: Options): object => {
-    return {
-        where: filter,
-        limit: options?.limit,
-        offset: options?.offset,
-        order: OptionsOrder(options?.orderBy)
-    }
 }

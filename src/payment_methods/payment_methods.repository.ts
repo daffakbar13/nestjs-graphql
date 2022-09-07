@@ -1,7 +1,7 @@
 import { InjectModel } from "@nestjs/sequelize";
 import { WhereOptions } from "sequelize";
 import { User } from "src/auth/entities/user.entity";
-import { Options, QueryOptions } from "src/utils/options";
+import { Options, Query } from "src/utils/options";
 import { UpdatePaymentMethod } from "./dto/payment_method.dto";
 import { PaymentMethod } from "./entities/payment_method.entity";
 
@@ -20,7 +20,7 @@ export class PaymentMethodRepository {
     }
 
     public findAll(filter: WhereOptions, options?: Options): Promise<{ count: number; rows: PaymentMethod[] }> {
-        return this.paymentMethod.findAndCountAll(QueryOptions(filter, options));
+        return this.paymentMethod.findAndCountAll(Query(filter, options));
     }
 
     public async update(input: UpdatePaymentMethod, user: User): Promise<{ count: number; rows: PaymentMethod[] }> {

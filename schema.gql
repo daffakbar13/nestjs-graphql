@@ -164,12 +164,86 @@ type Query {
 input Options {
   limit: Float
   offset: Float
-  orderBy: OrderBy
+  orderBy: Order
+  operator: Operator
 }
 
-input OrderBy {
-  ascending: [String]
-  descending: [String]
+input Order {
+  ascending: [String!]
+  descending: [String!]
+}
+
+input Operator {
+  adjacent: ValueArrayNumber
+  all: ValueString
+  and: String
+  any: ValueArrayNumber
+  between: ValueArrayNumber
+  col: ValueString
+  contained: ValueArrayNumber
+  contains: ValueArrayNumber
+  endsWith: ValueString
+  eq: ValueString
+  gt: ValueNumber
+  gte: ValueNumber
+  iLike: ValueString
+  in: ValueArrayString
+  iRegexp: ValueString
+  is: ValueBoolean
+  like: ValueString
+  lt: ValueNumber
+  lte: ValueNumber
+  match: ValueFunction
+  ne: ValueString
+  noExtendLeft: ValueArrayNumber
+  noExtendRight: ValueArrayNumber
+  not: ValueBoolean
+  notBetween: ValueArrayNumber
+  notILike: ValueString
+  notIn: ValueArrayString
+  notIRegexp: ValueArrayNumber
+  notLike: ValueString
+  notRegexp: ValueArrayNumber
+  or: String
+  overlap: ValueArrayNumber
+  placeholder: ValueBoolean
+  regexp: ValueArrayNumber
+  startsWith: ValueString
+  strictLeft: ValueArrayNumber
+  strictRight: ValueArrayNumber
+  substring: ValueString
+  values: ValueArrayString
+}
+
+input ValueArrayNumber {
+  column: String!
+  value: [Float!]!
+}
+
+input ValueString {
+  column: String!
+  value: String!
+}
+
+input ValueNumber {
+  column: String!
+  value: Float!
+}
+
+input ValueArrayString {
+  column: String!
+  value: [String!]!
+}
+
+input ValueBoolean {
+  column: String!
+  value: Boolean
+}
+
+input ValueFunction {
+  column: String!
+  function: String!
+  value: Float!
 }
 
 input FilterProduct {

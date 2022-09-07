@@ -1,7 +1,6 @@
-import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
-import { InjectModel } from '@nestjs/sequelize';
 import { User, UserModel } from 'src/auth/entities/user.entity';
 import { LoginDto, RegisterUser } from './dto/auth.dto';
 import { config } from 'dotenv';
@@ -10,7 +9,7 @@ import { Role, RoleModel } from 'src/auth/entities/role.entity';
 import { WhereOptions } from 'sequelize';
 import { CreateRole, FilterRole, UpdateRole } from 'src/auth/dto/role.dto';
 import { CreateUser, FilterUser, UpdateUser } from './dto/user.dto';
-import { Options, QueryOptions } from 'src/utils/options';
+import { Options } from 'src/utils/options';
 import { RoleRepository, UserRepository } from './auth.repository';
 
 config({ path: resolve(__dirname, '../../.env') })
@@ -24,7 +23,7 @@ export class UserService {
   }
 
   public async findAll(filter: FilterUser, options?: Options): Promise<UserModel> {
-    return this.repository.findAll(filter as WhereOptions, options)
+    return this.repository.findAll({ ...filter }, options)
   }
 
   public async update(input: UpdateUser): Promise<UserModel> {

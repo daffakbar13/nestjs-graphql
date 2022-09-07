@@ -1,7 +1,6 @@
 import { InputType, Field, PartialType, ArgsType, OmitType, PickType } from '@nestjs/graphql';
 import { IsArray, IsDate, IsInt, IsString, MaxLength } from 'class-validator';
 import { Options } from 'src/utils/options';
-import Permissions from '../permissions/index.permissions';
 
 @InputType()
 export class CreateRole {

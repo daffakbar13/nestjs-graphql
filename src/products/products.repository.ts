@@ -4,9 +4,10 @@ import { CreateProduct, UpdateProduct } from "./dto/product.dto";
 import { UpdateProductStatus } from "./dto/product-status.dto";
 import { Product } from "./entities/product.entity";
 import { ProductStatus } from "./entities/product-status.entity";
-import { Options, QueryOptions } from "src/utils/options";
 import { CheckAvailibility } from "src/utils/notfound-exception";
 import { User } from "src/auth/entities/user.entity";
+import { Options, Query } from "src/utils/options";
+// import { Options, Query } from "src/utils/options";
 
 export class ProductRepository {
     @InjectModel(Product)
@@ -30,7 +31,7 @@ export class ProductRepository {
     }
 
     public findAll(filter?: WhereOptions, options?: Options): Promise<{ count: number; rows: Product[] }> {
-        return this.product.findAndCountAll(QueryOptions(filter, options));
+        return this.product.findAndCountAll(Query(filter, options));
     }
 
     public async update(input: UpdateProduct, user: User): Promise<{ count: number; rows: Product[] }> {
@@ -63,7 +64,7 @@ export class ProductStatusRepository {
     }
 
     public findAll(filter: WhereOptions, options?: Options): Promise<{ count: number; rows: ProductStatus[] }> {
-        return this.productStatus.findAndCountAll(QueryOptions(filter, options));
+        return this.productStatus.findAndCountAll(Query(filter, options));
     }
 
     public async update(input: UpdateProductStatus): Promise<{ count: number; rows: ProductStatus[] }> {

@@ -1,10 +1,11 @@
 import { InjectModel } from "@nestjs/sequelize";
 import { WhereOptions } from "sequelize";
 import { User } from "src/auth/entities/user.entity";
-import { Options, QueryOptions } from "src/utils/options";
+import { Query, Options } from "src/utils/options";
 import { UpdateRole } from "./dto/role.dto";
 import { UpdateUser } from "./dto/user.dto";
 import { Role } from "./entities/role.entity";
+
 
 export class RoleRepository {
     @InjectModel(Role)
@@ -17,7 +18,7 @@ export class RoleRepository {
     }
 
     public findAll(filter: WhereOptions, options?: Options): Promise<{ count: number; rows: Role[] }> {
-        return this.role.findAndCountAll(QueryOptions(filter, options));
+        return this.role.findAndCountAll(Query(filter, options));
     }
 
     public async update(input: UpdateRole): Promise<{ count: number; rows: Role[] }> {
@@ -46,7 +47,7 @@ export class UserRepository {
     }
 
     public findAll(filter: WhereOptions, options?: Options): Promise<{ count: number; rows: User[] }> {
-        return this.user.findAndCountAll(QueryOptions(filter, options));
+        return this.user.findAndCountAll(Query({ ...filter }, options));
     }
 
     public async update(input: UpdateUser): Promise<{ count: number; rows: User[] }> {

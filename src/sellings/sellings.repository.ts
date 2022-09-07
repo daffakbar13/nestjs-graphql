@@ -2,7 +2,7 @@ import { InjectModel } from "@nestjs/sequelize";
 import { WhereOptions } from "sequelize";
 import { User } from "src/auth/entities/user.entity";
 import { CheckAvailibility } from "src/utils/notfound-exception";
-import { Options, QueryOptions } from "src/utils/options";
+import { Options, Query } from "src/utils/options";
 import { CreateSelling, UpdateSelling } from "./dto/selling.dto";
 import { Selling } from "./entities/selling.entity";
 
@@ -32,7 +32,7 @@ export class SellingRepository {
     }
 
     public findAll(filter: WhereOptions, options?: Options): Promise<{ count: number; rows: Selling[] }> {
-        return this.selling.findAndCountAll(QueryOptions(filter, options));
+        return this.selling.findAndCountAll(Query(filter, options));
     }
 
     public async update(input: UpdateSelling, user: User): Promise<{ count: number; rows: Selling[] }> {
